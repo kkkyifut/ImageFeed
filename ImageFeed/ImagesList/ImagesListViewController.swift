@@ -19,7 +19,7 @@ class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        photosName = Array(0..<20).map{ "\($0)" }
+        photosName = Array(0...20).map{ "\($0)" }
     }
 }
 
