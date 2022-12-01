@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC64D9DC29392FB600F02094 /* YSDisplay-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC64D9DA29392FB600F02094 /* YSDisplay-Medium.ttf */; };
+		CC64D9DD29392FB600F02094 /* YSDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC64D9DB29392FB600F02094 /* YSDisplay-Bold.ttf */; };
 		CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD191B829292116004E6439 /* ImagesListCell.swift */; };
+		CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDF239A2939277200AD7261 /* ProfileViewController.swift */; };
 		CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357329269DDA003D1627 /* AppDelegate.swift */; };
 		CCEB357629269DDA003D1627 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357529269DDA003D1627 /* SceneDelegate.swift */; };
 		CCEB357829269DDA003D1627 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357729269DDA003D1627 /* ImagesListViewController.swift */; };
@@ -17,7 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CC64D9DA29392FB600F02094 /* YSDisplay-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YSDisplay-Medium.ttf"; sourceTree = "<group>"; };
+		CC64D9DB29392FB600F02094 /* YSDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YSDisplay-Bold.ttf"; sourceTree = "<group>"; };
 		CCD191B829292116004E6439 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		CCDF239A2939277200AD7261 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CCEB357029269DDA003D1627 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCEB357329269DDA003D1627 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CCEB357529269DDA003D1627 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +45,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC64D9D929392FA200F02094 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CC64D9DB29392FB600F02094 /* YSDisplay-Bold.ttf */,
+				CC64D9DA29392FB600F02094 /* YSDisplay-Medium.ttf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CC64D9DE2939317E00F02094 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				CCDF239A2939277200AD7261 /* ProfileViewController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		CCD191BA29292146004E6439 /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +90,7 @@
 		CCEB357229269DDA003D1627 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				CC64D9DE2939317E00F02094 /* Profile */,
 				CCD191BA29292146004E6439 /* ImagesList */,
 				CCEB357329269DDA003D1627 /* AppDelegate.swift */,
 				CCEB357529269DDA003D1627 /* SceneDelegate.swift */,
@@ -74,6 +98,7 @@
 				CCEB357C29269DDB003D1627 /* Assets.xcassets */,
 				CCEB357E29269DDB003D1627 /* LaunchScreen.storyboard */,
 				CCEB358129269DDB003D1627 /* Info.plist */,
+				CC64D9D929392FA200F02094 /* Resources */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -136,9 +161,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC64D9DC29392FB600F02094 /* YSDisplay-Medium.ttf in Resources */,
 				CCEB358029269DDB003D1627 /* LaunchScreen.storyboard in Resources */,
 				CCEB357D29269DDB003D1627 /* Assets.xcassets in Resources */,
 				CCEB357B29269DDA003D1627 /* Main.storyboard in Resources */,
+				CC64D9DD29392FB600F02094 /* YSDisplay-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +178,7 @@
 			files = (
 				CCEB357829269DDA003D1627 /* ImagesListViewController.swift in Sources */,
 				CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */,
+				CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */,
 				CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */,
 				CCEB357629269DDA003D1627 /* SceneDelegate.swift in Sources */,
 			);
