@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CC64D9DC29392FB600F02094 /* YSDisplay-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC64D9DA29392FB600F02094 /* YSDisplay-Medium.ttf */; };
 		CC64D9DD29392FB600F02094 /* YSDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC64D9DB29392FB600F02094 /* YSDisplay-Bold.ttf */; };
+		CC64D9E0293BBD0C00F02094 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC64D9DF293BBD0C00F02094 /* SingleImageViewController.swift */; };
 		CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD191B829292116004E6439 /* ImagesListCell.swift */; };
 		CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDF239A2939277200AD7261 /* ProfileViewController.swift */; };
 		CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357329269DDA003D1627 /* AppDelegate.swift */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		CC64D9DA29392FB600F02094 /* YSDisplay-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YSDisplay-Medium.ttf"; sourceTree = "<group>"; };
 		CC64D9DB29392FB600F02094 /* YSDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YSDisplay-Bold.ttf"; sourceTree = "<group>"; };
+		CC64D9DF293BBD0C00F02094 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		CCD191B829292116004E6439 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		CCDF239A2939277200AD7261 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CCEB357029269DDA003D1627 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +101,7 @@
 				CCEB357E29269DDB003D1627 /* LaunchScreen.storyboard */,
 				CCEB358129269DDB003D1627 /* Info.plist */,
 				CC64D9D929392FA200F02094 /* Resources */,
+				CC64D9DF293BBD0C00F02094 /* SingleImageViewController.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */,
 				CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */,
 				CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */,
+				CC64D9E0293BBD0C00F02094 /* SingleImageViewController.swift in Sources */,
 				CCEB357629269DDA003D1627 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
