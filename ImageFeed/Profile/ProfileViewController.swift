@@ -1,7 +1,12 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
-    private var avatarImageView: UIImageView!
+    private lazy var avatarImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "avatar"))
+        imageView.tag = 1
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
     private var nameLabel: UILabel!
     private var loginLabel: UILabel!
     private var descriptionLabel: UILabel!
