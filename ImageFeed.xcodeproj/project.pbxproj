@@ -64,6 +64,14 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		CC64D9E1293BC77100F02094 /* SingleImageView */ = {
+			isa = PBXGroup;
+			children = (
+				CC64D9DF293BBD0C00F02094 /* SingleImageViewController.swift */,
+			);
+			path = SingleImageView;
+			sourceTree = "<group>";
+		};
 		CCD191BA29292146004E6439 /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,16 +100,16 @@
 		CCEB357229269DDA003D1627 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				CC64D9DE2939317E00F02094 /* Profile */,
-				CCD191BA29292146004E6439 /* ImagesList */,
 				CCEB357329269DDA003D1627 /* AppDelegate.swift */,
 				CCEB357529269DDA003D1627 /* SceneDelegate.swift */,
+				CC64D9DE2939317E00F02094 /* Profile */,
+				CCD191BA29292146004E6439 /* ImagesList */,
+				CC64D9E1293BC77100F02094 /* SingleImageView */,
 				CCEB357929269DDA003D1627 /* Main.storyboard */,
 				CCEB357C29269DDB003D1627 /* Assets.xcassets */,
 				CCEB357E29269DDB003D1627 /* LaunchScreen.storyboard */,
 				CCEB358129269DDB003D1627 /* Info.plist */,
 				CC64D9D929392FA200F02094 /* Resources */,
-				CC64D9DF293BBD0C00F02094 /* SingleImageViewController.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
