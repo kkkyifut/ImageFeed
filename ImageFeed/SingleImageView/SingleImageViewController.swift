@@ -16,17 +16,17 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction private func didTapShareButton() {
+        let share = UIActivityViewController(activityItems: [image as UIImage], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = image
         scrollView.minimumZoomScale = 0.5
         scrollView.maximumZoomScale = 2
         rescaleAndCenterImageInScrollView(image: image)
-    }
-    
-    @IBAction private func didTapShareButton() {
-        let share = UIActivityViewController(activityItems: [image as UIImage], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
     }
 }
 
