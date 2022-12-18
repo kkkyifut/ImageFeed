@@ -18,22 +18,20 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        guard storageToken.token != nil else {
-            OAuth2Service.shared.fetchAuthToken(code: code) { result in
-                DispatchQueue.main.async { [self] in
-                    do {
-                        let data = try result.get()
-                        storageToken.token = data
-                    } catch let error {
-                        print("Error: ", error)
-                    }
+        guard storageToken.token == nil else { return }
+        OAuth2Service.shared.fetchAuthToken(code: code) { result in
+            DispatchQueue.main.async { [self] in
+                do {
+                    let data = try result.get()
+                    storageToken.token = data
+                } catch let error {
+                    print("Error: ", error)
                 }
             }
-            let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
-            UIApplication.shared.windows.first?.rootViewController = tabBarViewController
-            UIApplication.shared.windows.first?.makeKeyAndVisible()
-            return
         }
+        let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
+        UIApplication.shared.windows.first?.rootViewController = tabBarViewController
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
