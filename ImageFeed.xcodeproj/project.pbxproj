@@ -17,6 +17,7 @@
 		CC8376E0294E3BDA00A7FCF9 /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8376DF294E3BDA00A7FCF9 /* OAuth2TokenStorage.swift */; };
 		CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD191B829292116004E6439 /* ImagesListCell.swift */; };
 		CCD50679294E462100F88C7C /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD50678294E462100F88C7C /* OAuthTokenResponseBody.swift */; };
+		CCD5067C294F46F500F88C7C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD5067B294F46F500F88C7C /* SplashViewController.swift */; };
 		CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDF239A2939277200AD7261 /* ProfileViewController.swift */; };
 		CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357329269DDA003D1627 /* AppDelegate.swift */; };
 		CCEB357629269DDA003D1627 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357529269DDA003D1627 /* SceneDelegate.swift */; };
@@ -37,6 +38,7 @@
 		CC8376DF294E3BDA00A7FCF9 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		CCD191B829292116004E6439 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		CCD50678294E462100F88C7C /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
+		CCD5067B294F46F500F88C7C /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		CCDF239A2939277200AD7261 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CCEB357029269DDA003D1627 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCEB357329269DDA003D1627 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +114,14 @@
 			path = ImagesList;
 			sourceTree = "<group>";
 		};
+		CCD5067A294F46E400F88C7C /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				CCD5067B294F46F500F88C7C /* SplashViewController.swift */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		CCEB356729269DDA003D1627 = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +147,7 @@
 				CC64D9DE2939317E00F02094 /* Profile */,
 				CCD191BA29292146004E6439 /* ImagesList */,
 				CC64D9E1293BC77100F02094 /* SingleImageView */,
+				CCD5067A294F46E400F88C7C /* Splash */,
 				CC19CED3294C8C9700747CC4 /* Auth */,
 				CC8376DC294E3A3C00A7FCF9 /* Services */,
 				CCEB357929269DDA003D1627 /* Main.storyboard */,
@@ -227,6 +238,7 @@
 				CC066012294B60420076C1DF /* Constants.swift in Sources */,
 				CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */,
 				CC8376E0294E3BDA00A7FCF9 /* OAuth2TokenStorage.swift in Sources */,
+				CCD5067C294F46F500F88C7C /* SplashViewController.swift in Sources */,
 				CC19CED2294C8C2000747CC4 /* AuthViewController.swift in Sources */,
 				CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */,
 				CC64D9E0293BBD0C00F02094 /* SingleImageViewController.swift in Sources */,

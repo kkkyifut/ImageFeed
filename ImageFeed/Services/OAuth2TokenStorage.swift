@@ -18,7 +18,7 @@ final class OAuth2TokenStorage {
     
     private func loadUserDefaults<T: Codable>(for key: Keys, as dataType: T.Type) -> T? {
         guard let data = storage.data(forKey: key.rawValue),
-              let count = try? JSONDecoder().decode(dataType, from: data) else {
+              let count = try? JSONDecoder().decode(dataType.self, from: data) else {
             return nil
         }
         return count

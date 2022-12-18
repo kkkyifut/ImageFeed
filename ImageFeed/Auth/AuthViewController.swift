@@ -1,18 +1,14 @@
 import UIKit
 
 final class AuthViewController: UIViewController {
-    private let ShowWebViewSegueIdentifier = "ShowWebView"
+    private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
+    private let showWebViewSegueIdentifier = "ShowWebView"
     private let storageToken = OAuth2TokenStorage()
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == ShowWebViewSegueIdentifier {
-            guard let webViewViewController = segue.destination as? WebViewViewController
-            else {
-                fatalError("Failed to prepare for \(ShowWebViewSegueIdentifier)")
-            }
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+        guard segue.identifier == showWebViewSegueIdentifier else { return }
+        guard let webViewViewController = segue.destination as? WebViewViewController else { return }
+        webViewViewController.delegate = self
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -29,15 +25,18 @@ extension AuthViewController: WebViewViewControllerDelegate {
                         let data = try result.get()
                         storageToken.token = data
                     } catch let error {
-                        print(error)
+                        print("Error: ", error)
                     }
                 }
             }
+            let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
+            UIApplication.shared.windows.first?.rootViewController = tabBarViewController
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
             return
         }
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 }
