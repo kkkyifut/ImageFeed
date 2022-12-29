@@ -30,8 +30,7 @@ final class ProfileViewController: UIViewController {
         
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
-        nameLabel.font = UIFont(name: "YSDisplay-Medium", size: 23.0)
-        nameLabel.font = nameLabel.font.withSize(23)
+        nameLabel.font = UIFont.systemFont(ofSize: 23, weight: UIFont.Weight.bold)
         nameLabel.textColor = UIColor(named: "YP White")
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
@@ -39,7 +38,7 @@ final class ProfileViewController: UIViewController {
         
         let loginLabel = UILabel()
         loginLabel.text = "@eva_elfie"
-        loginLabel.font = UIFont(name: "YSDisplay-Medium", size: 13.0)
+        loginLabel.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.regular)
         loginLabel.textColor = UIColor(named: "YP Gray")
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginLabel)
@@ -62,7 +61,7 @@ final class ProfileViewController: UIViewController {
     private func createProfileDescription() {
         let description = UILabel()
         description.text = "Hello, my dear reviewer!"
-        description.font = UIFont(name: "YSDisplay-Medium", size: 13.0)
+        description.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.regular)
         description.textColor = UIColor(named: "YP White")
         description.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(description)
