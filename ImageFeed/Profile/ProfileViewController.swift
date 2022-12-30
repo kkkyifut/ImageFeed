@@ -1,6 +1,9 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
+    private let storageToken = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
+    
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "avatar"))
         imageView.tag = 1
@@ -17,6 +20,17 @@ final class ProfileViewController: UIViewController {
         createProfileImageAndLogin()
         createProfileDescription()
         exitButton()
+        updateProfileDetails(profile: profileService.profile!)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
     }
     
     private func createProfileImageAndLogin() {
@@ -76,7 +90,7 @@ final class ProfileViewController: UIViewController {
     
     private func exitButton() {
         let exitButton = UIButton.systemButton(
-            with: UIImage(systemName: "ipad.and.arrow.forward")!,
+            with: UIImage(named: "ipad.and.arrow.forward")!,
             target: self,
             action: #selector(Self.didTapLogoutButton))
         exitButton.tintColor = UIColor(named: "YP Red")

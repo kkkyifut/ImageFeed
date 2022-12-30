@@ -28,6 +28,10 @@ final class SingleImageViewController: UIViewController {
         scrollView.maximumZoomScale = 2
         rescaleAndCenterImageInScrollView(image: image)
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
