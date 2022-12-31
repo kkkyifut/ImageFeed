@@ -54,7 +54,7 @@ final class ProfileService {
     }
     
     private func makeRequest(token: String) -> URLRequest {
-        guard let url = URL(string: currentUserURLString) else { fatalError("Failed to create URL") }
+        guard let url = URL(string: defaultBaseURL + "/me") else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
@@ -63,14 +63,12 @@ final class ProfileService {
 
 struct ProfileResult: Codable {
     let username, firstName, lastName, bio: String?
-    let profileImage: [String:String]
     
     enum CodingKeys: String, CodingKey {
         case username = "username"
         case firstName = "first_name"
         case lastName = "last_name"
         case bio = "bio"
-        case profileImage = "profile_image"
     }
 }
 

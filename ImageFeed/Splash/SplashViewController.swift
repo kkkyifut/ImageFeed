@@ -4,6 +4,7 @@ final class SplashViewController: UIViewController {
     private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
     private let storageToken = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     private enum NetworkError: Error {
         case codeError
@@ -31,6 +32,8 @@ final class SplashViewController: UIViewController {
                 switch result {
                 case .success:
                     UIBlockingProgressHUD.dismiss()
+                    self.profileImageService.fetchProfileImageURL(username: (self.profileService.profile?.username)!) { _ in
+                    }
                     self.showNextScreen(withID: "TabBarViewController")
                 case .failure:
                     UIBlockingProgressHUD.dismiss()
@@ -39,5 +42,7 @@ final class SplashViewController: UIViewController {
                 }
             }
         }
+            
+//        }
     }
 }
