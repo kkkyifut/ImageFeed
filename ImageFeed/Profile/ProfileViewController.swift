@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     private let storageToken = OAuth2TokenStorage()
@@ -42,7 +43,20 @@ final class ProfileViewController: UIViewController {
         guard let profileImageURL = ProfileImageService.shared.avatarURL,
               let url = URL(string: profileImageURL)
         else { return }
-        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: avatarImageView.frame.width)
+        avatarImageView.kf.indicatorType = .activity
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder.png"), options: [.processor(processor)]) { result in
+            switch result {
+            case .success(let value):
+                print("Аватарка \(value.image) была успешно загружена и заменена в профиле")
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     private func updateProfileDetails(profile: Profile) {

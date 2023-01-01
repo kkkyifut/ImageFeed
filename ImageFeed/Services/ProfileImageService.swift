@@ -5,12 +5,12 @@ final class ProfileImageService {
     static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
-    private let tokenStorage = OAuth2TokenStorage().token
+    private let storageToken = OAuth2TokenStorage()
     private(set) var avatarURL: String?
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        let request = makeRequest(token: tokenStorage!, username: username)
+        let request = makeRequest(token: storageToken.token!, username: username)
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             switch result {
