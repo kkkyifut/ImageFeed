@@ -5,11 +5,7 @@ final class SplashViewController: UIViewController {
     private let storageToken = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    
-    private enum NetworkError: Error {
-        case codeError
-    }
-    
+        
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard storageToken.token != nil else {
@@ -37,8 +33,15 @@ final class SplashViewController: UIViewController {
                     self.showNextScreen(withID: "TabBarViewController")
                 case .failure:
                     UIBlockingProgressHUD.dismiss()
-                    print("Error:", NetworkError.codeError)
-                    break
+                    let alert = UIAlertController(
+                        title: "Что-то пошло не так",
+                        message: "Не удалось войти в систему. Проверьте ваше интернет соединение",
+                        preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "ОК", style: .default) { _ in
+                        self.showNextScreen(withID: "SplashViewController")
+                    }
+                    alert.addAction(okAction)
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
         }

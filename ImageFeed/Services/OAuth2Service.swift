@@ -17,33 +17,16 @@ final class OAuth2Service {
         lastCode = code
         let request = makeRequest(code: code)
         let session = URLSession.shared
-//        let task = session.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-//        }
-        let task = session.dataTask(with: request) { (data, response, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                    return
+        let task = session.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            switch result {
+            case .success(let decodedObject):
+                completion(.success(decodedObject.accessToken))
+                self?.task = nil
+                if Error.self != nil {
+                    self?.lastCode = nil
                 }
-                if let response = response as? HTTPURLResponse,
-                   !(200...299).contains(response.statusCode) {
-                    completion(.failure(NetworkError.codeError))
-                    return
-                }
-                if let data = data {
-                    do {
-                        let decodedData = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(decodedData.accessToken))
-                        self.task = nil
-                        if error != nil {
-                            self.lastCode = nil
-                        }
-                    } catch let error {
-                        completion(.failure(error))
-                    }
-                } else {
-                    return
-                }
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
         self.task = task
