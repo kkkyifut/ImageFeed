@@ -1,6 +1,11 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    private let storageToken = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "avatar"))
         imageView.tag = 1
@@ -13,10 +18,51 @@ final class ProfileViewController: UIViewController {
     private var logoutButton: UIButton!
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = UIColor(named: "YP Black")
         createProfileImageAndLogin()
         createProfileDescription()
         exitButton()
+        updateProfileDetails(profile: profileService.profile!)
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+                forName: ProfileImageService.DidChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    private func updateAvatar() {                                   
+        guard let profileImageURL = ProfileImageService.shared.avatarURL,
+              let url = URL(string: profileImageURL)
+        else { return }
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: avatarImageView.frame.width)
+        avatarImageView.kf.indicatorType = .activity
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder.png"), options: [.processor(processor)]) { result in
+            switch result {
+            case .success(let value):
+                print("Аватарка \(value.image) была успешно загружена и заменена в профиле")
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
     }
     
     private func createProfileImageAndLogin() {
@@ -76,7 +122,7 @@ final class ProfileViewController: UIViewController {
     
     private func exitButton() {
         let exitButton = UIButton.systemButton(
-            with: UIImage(systemName: "ipad.and.arrow.forward")!,
+            with: UIImage(named: "ipad.and.arrow.forward")!,
             target: self,
             action: #selector(Self.didTapLogoutButton))
         exitButton.tintColor = UIColor(named: "YP Red")
