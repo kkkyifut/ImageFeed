@@ -8,6 +8,7 @@ extension URLSession {
     func objectTask<T: Decodable>(for request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) -> URLSessionTask {
         let task = dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
+                UIBlockingProgressHUD.dismiss()
                 if let error = error {
                     completion(.failure(error))
                     return
@@ -21,7 +22,6 @@ extension URLSession {
                     do {
                         let decodedData = try JSONDecoder().decode(T.self, from: data)
                         completion(.success(decodedData))
-                        UIBlockingProgressHUD.dismiss()
                     } catch let error {
                         completion(.failure(error))
                     }
