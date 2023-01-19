@@ -49,7 +49,7 @@ final class ProfileViewController: UIViewController {
         
         let processor = RoundCornerImageProcessor(cornerRadius: avatarImageView.frame.width)
         avatarImageView.kf.indicatorType = .activity
-        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder.png"), options: [.processor(processor)]) { result in
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"), options: [.processor(processor)]) { result in
             switch result {
             case .success(let value):
                 print("Аватарка \(value.image) была успешно загружена и заменена в профиле")
@@ -66,7 +66,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func createProfileImageAndLogin() {
-        let profileImage = UIImage(named: "avatar")
+        let profileImage = UIImage(named: "placeholder")
         let profileImageView = UIImageView(image: profileImage)
         profileImageView.tintColor = UIColor(named: "YP Gray")
         profileImageView.translatesAutoresizingMaskIntoConstraints = false

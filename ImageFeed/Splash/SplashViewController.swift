@@ -6,6 +6,23 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
         
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = UIColor(named: "YP Black")
+        createSplashImage()
+    }
+    
+    private func createSplashImage() {
+        let imageView = UIImageView(image: UIImage(named: "Vector"))
+        self.view.addSubview(imageView)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        ])
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard storageToken.token != nil else {

@@ -25,6 +25,7 @@
 		CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD191B829292116004E6439 /* ImagesListCell.swift */; };
 		CCD50679294E462100F88C7C /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD50678294E462100F88C7C /* OAuthTokenResponseBody.swift */; };
 		CCD5067C294F46F500F88C7C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD5067B294F46F500F88C7C /* SplashViewController.swift */; };
+		CCDD5B2D2979A81C00D7DAAF /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDD5B2C2979A81C00D7DAAF /* TabBarController.swift */; };
 		CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDF239A2939277200AD7261 /* ProfileViewController.swift */; };
 		CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357329269DDA003D1627 /* AppDelegate.swift */; };
 		CCEB357629269DDA003D1627 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB357529269DDA003D1627 /* SceneDelegate.swift */; };
@@ -50,6 +51,7 @@
 		CCD191B829292116004E6439 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		CCD50678294E462100F88C7C /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
 		CCD5067B294F46F500F88C7C /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		CCDD5B2C2979A81C00D7DAAF /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		CCDF239A2939277200AD7261 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CCEB357029269DDA003D1627 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCEB357329269DDA003D1627 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +148,14 @@
 			path = Splash;
 			sourceTree = "<group>";
 		};
+		CCDD5B2B2979A80900D7DAAF /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				CCDD5B2C2979A81C00D7DAAF /* TabBarController.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
 		CCEB356729269DDA003D1627 = {
 			isa = PBXGroup;
 			children = (
@@ -170,6 +180,7 @@
 				CC066011294B60420076C1DF /* Constants.swift */,
 				CC513331295EE29F0093354D /* UIBlockingProgressHUD.swift */,
 				CC64D9DE2939317E00F02094 /* Profile */,
+				CCDD5B2B2979A80900D7DAAF /* TabBar */,
 				CCD191BA29292146004E6439 /* ImagesList */,
 				CC64D9E1293BC77100F02094 /* SingleImageView */,
 				CCD5067A294F46E400F88C7C /* Splash */,
@@ -271,6 +282,7 @@
 				CCEB357829269DDA003D1627 /* ImagesListViewController.swift in Sources */,
 				CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */,
 				CCD50679294E462100F88C7C /* OAuthTokenResponseBody.swift in Sources */,
+				CCDD5B2D2979A81C00D7DAAF /* TabBarController.swift in Sources */,
 				CC513339296068E30093354D /* URLSession.swift in Sources */,
 				CC066012294B60420076C1DF /* Constants.swift in Sources */,
 				CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */,
