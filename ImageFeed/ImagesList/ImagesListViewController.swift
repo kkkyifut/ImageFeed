@@ -3,6 +3,9 @@ import UIKit
 class ImagesListViewController: UIViewController {
     private var photosName = [String]()
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
+    private let imagesListService = ImagesListService.shared
+    private let storageToken = OAuth2TokenStorage()
+    private var imagesListServiceObserver: NSObjectProtocol?
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -21,6 +24,13 @@ class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         photosName = Array(0...20).map{ "\($0)" }
+        imagesListServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.DidChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                guard let self = self else { return }
+//                self.updatePhoto()
+            }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -66,5 +76,28 @@ extension ImagesListViewController {
         cell.cellImage.image = image
         cell.dateLabel.text = dateFormatter.string(from: NSDate() as Date)
         cell.likeButton.imageView?.image = indexPath.row % 2 == 1 ? UIImage(named: "Active") : UIImage(named: "No Active")
+    }
+}
+
+extension ImagesListViewController {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard storageToken.token != nil else { return }
+        UIBlockingProgressHUD.show()
+        if indexPath.row + 1 == imagesListService.photos.count {
+            imagesListService.fetchPhotosNextPage(storageToken.token!) { result in
+                DispatchQueue.main.async { [self] in
+                    do {
+                        let photos = try result.get()
+//                        tableView.cellForRow(at: indexPath)?.imageView?.image = photos[indexPath.row].largeImageURL
+//                        storageToken.token = data
+//                        self.fetchProfile(token: storageToken.token!)
+                        UIBlockingProgressHUD.dismiss()
+                    } catch let error {
+                        print("Error: ", error)
+                        UIBlockingProgressHUD.dismiss()
+                    }
+                }
+            }
+        }
     }
 }
