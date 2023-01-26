@@ -1,18 +1,20 @@
 import UIKit
 
 final class ImagesListService {
-    static let shared = ImagesListService()
-    private (set) var photos: [Photo] = []
     static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let shared = ImagesListService()
+    private let storageToken = OAuth2TokenStorage()
+    
+    private (set) var photos: [Photo] = []
     private var task: URLSessionTask?
     private var lastLoadedPage: Int?
     
-    private init() {}
+    init() {}
     
-    func fetchPhotosNextPage(_ token: String, completion: @escaping (Result<[Photo], Error>) -> Void) {
+    func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         lastLoadedPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
-        let request = makeRequest(token: token, page: lastLoadedPage!)
+        let request = makeRequest(token: storageToken.token!, page: lastLoadedPage!)
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             switch result {
@@ -20,10 +22,14 @@ final class ImagesListService {
                 for photo in photos {
                     let photo = Photo(decodedData: photo)
                     self?.photos.append(photo)
+//                    print("photo", photo)
                 }
-                completion(.success(self?.photos ?? []))
+                NotificationCenter.default.post(
+                    name: ImagesListService.DidChangeNotification,
+                    object: self
+                )
             case .failure(let error):
-                completion(.failure(error))
+                print(error)
             }
         }
         self.task = task
@@ -31,36 +37,36 @@ final class ImagesListService {
     }
     
     private func makeRequest(token: String, page: Int) -> URLRequest {
-        guard let url = URL(string: defaultBaseURL + "/photos?page=\(page)") else { fatalError("Failed to create URL") }
+        guard let url = URL(string: defaultBaseURL + "photos?page=\(page)") else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        lastLoadedPage! += 1
+        print("urlMakeRequest", url)
         return request
     }
 }
 
 struct PhotoResult: Codable {
-    let id, thumbImageURL, largeImageURL: String
+    let id: String
     let welcomeDescription: String?
-    let size: CGSize
-    let createdAt: Date?
+    let urls: [String: String]
+//    let size: CGSize
+    let createdAt: String?
     let isLiked: Bool
 
     enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case size = "size"
+        case id
+        case urls
+//        case size
         case createdAt = "created_at"
         case welcomeDescription = "description"
-        case thumbImageURL = "thumb"
-        case largeImageURL = "full"
         case isLiked = "liked_by_user"
     }
 }
 
 struct Photo: Codable {
     let id: String
-    let size: CGSize
-    let createdAt: Date?
+//    let size: CGSize
+    let createdAt: String?
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
@@ -68,11 +74,21 @@ struct Photo: Codable {
     
     init(decodedData: PhotoResult) {
         self.id = decodedData.id
-        self.size = decodedData.size
+//        self.size = decodedData.size
         self.createdAt = decodedData.createdAt
         self.welcomeDescription = decodedData.welcomeDescription
-        self.thumbImageURL = decodedData.thumbImageURL
-        self.largeImageURL = decodedData.largeImageURL
+        self.thumbImageURL = decodedData.urls[UrlsResult.CodingKeys.thumbImageURL.rawValue]!
+        self.largeImageURL = decodedData.urls[UrlsResult.CodingKeys.largeImageURL.rawValue]!
         self.isLiked = decodedData.isLiked
+    }
+}
+
+struct UrlsResult: Codable {
+    let thumbImageURL: String
+    let largeImageURL: String
+    
+    enum CodingKeys: String, CodingKey {
+        case thumbImageURL = "thumb"
+        case largeImageURL = "full"
     }
 }

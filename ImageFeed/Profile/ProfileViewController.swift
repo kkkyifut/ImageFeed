@@ -40,8 +40,7 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatar() {                                   
         guard let profileImageURL = ProfileImageService.shared.avatarURL,
-              let url = URL(string: profileImageURL)
-        else { return }
+              let url = URL(string: profileImageURL) else { return }
         let cache = ImageCache.default
         cache.clearMemoryCache()
         cache.clearDiskCache()
