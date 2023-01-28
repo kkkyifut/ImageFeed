@@ -6,6 +6,8 @@ class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
     private let storageToken = OAuth2TokenStorage()
     private var imagesListServiceObserver: NSObjectProtocol?
+    private var gradient: CAGradientLayer!
+    private let animationGradient = AnimationGradient.shared
     var photos: [Photo] = []
     
     private lazy var dateFormatter: DateFormatter = {
@@ -24,12 +26,14 @@ class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        gradient = animationGradient.createGradient(width: 343, height: 370, cornerRadius: 16)
         imagesListServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.DidChangeNotification,
             object: nil,
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }
                 self.updateTableViewAnimated()
+                animationGradient.removeGradient(gradient: self.gradient)
             }
         imagesListService.fetchPhotosNextPage()
     }
@@ -92,6 +96,7 @@ extension ImagesListViewController {
         let photo = photos[indexPath.row]
         guard let imageURL = URL(string: photo.thumbImageURL) else { return }
         
+        cell.layer.addSublayer(gradient)
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "stubPlaceholder"))
         

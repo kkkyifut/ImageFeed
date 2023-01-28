@@ -4,10 +4,14 @@ import Kingfisher
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var gradientAvatar: CAGradientLayer!
+    private var gradientName: CAGradientLayer!
+    private var gradientLogin: CAGradientLayer!
+    private var gradientDescription: CAGradientLayer!
+    private let animationGradient = AnimationGradient.shared
     
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "avatar"))
-        imageView.tag = 1
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -25,9 +29,9 @@ final class ProfileViewController: UIViewController {
         updateProfileDetails(profile: profileService.profile!)
         
         profileImageServiceObserver = NotificationCenter.default.addObserver(
-                forName: ProfileImageService.DidChangeNotification,
-                object: nil,
-                queue: .main) { [weak self] _ in
+            forName: ProfileImageService.DidChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
                 guard let self = self else { return }
                 self.updateAvatar()
             }
@@ -47,13 +51,14 @@ final class ProfileViewController: UIViewController {
         
         let processor = RoundCornerImageProcessor(cornerRadius: avatarImageView.frame.width)
         avatarImageView.kf.indicatorType = .activity
-        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"), options: [.processor(processor)]) { result in
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"), options: [.processor(processor)]) { [self] result in
             switch result {
             case .success(let value):
                 print("Аватарка \(value.image) была успешно загружена и заменена в профиле")
             case .failure(let error):
                 print(error)
             }
+            animationGradient.removeGradient(gradient: gradientAvatar)
         }
     }
     
@@ -61,6 +66,10 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.name
         loginLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
+        
+        animationGradient.removeGradient(gradient: gradientName)
+        animationGradient.removeGradient(gradient: gradientLogin)
+        animationGradient.removeGradient(gradient: gradientDescription)
     }
     
     private func createProfileImageAndLogin() {
@@ -68,9 +77,10 @@ final class ProfileViewController: UIViewController {
         let profileImageView = UIImageView(image: profileImage)
         profileImageView.tintColor = UIColor(named: "YP Gray")
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        profileImageView.tag = 1
         view.addSubview(profileImageView)
         self.avatarImageView = profileImageView
+        gradientAvatar = animationGradient.createGradient(width: 70, height: 70, cornerRadius: 35)
+        self.avatarImageView.layer.addSublayer(gradientAvatar)
         
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
@@ -79,6 +89,8 @@ final class ProfileViewController: UIViewController {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         self.nameLabel = nameLabel
+        gradientName = animationGradient.createGradient(width: 223, height: 23, cornerRadius: 11.5)
+        self.nameLabel.layer.addSublayer(gradientName)
         
         let loginLabel = UILabel()
         loginLabel.text = "@eva_elfie"
@@ -87,6 +99,8 @@ final class ProfileViewController: UIViewController {
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginLabel)
         self.loginLabel = loginLabel
+        gradientLogin = animationGradient.createGradient(width: 89, height: 18, cornerRadius: 9)
+        self.loginLabel.layer.addSublayer(gradientLogin)
         
         NSLayoutConstraint.activate([
             profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -110,6 +124,8 @@ final class ProfileViewController: UIViewController {
         description.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(description)
         self.descriptionLabel = description
+        gradientDescription = animationGradient.createGradient(width: 67, height: 18, cornerRadius: 9)
+        self.descriptionLabel.layer.addSublayer(gradientDescription)
         
         NSLayoutConstraint.activate([
             description.topAnchor.constraint(equalTo: self.loginLabel.bottomAnchor, constant: 8),
@@ -135,13 +151,71 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc func didTapLogoutButton(_ sender: UIButton) {
-        let viewImage = view.viewWithTag(1) as! UIImageView
-        viewImage.image = UIImage(systemName: "person.crop.circle.fill")
-        nameLabel?.removeFromSuperview()
-        nameLabel = nil
-        loginLabel?.removeFromSuperview()
-        loginLabel = nil
-        descriptionLabel?.removeFromSuperview()
-        descriptionLabel = nil
+        showLogoutAlert()
     }
+    
+    private func onLogout() {
+        OAuth2TokenStorage().clearToken()
+        WebViewViewController.clean()
+        tabBarController?.dismiss(animated: true)
+        guard let window = UIApplication.shared.windows.first else {
+            fatalError("Invalid Configuration") }
+        window.rootViewController = SplashViewController()
+    }
+    
+    private func showLogoutAlert() {
+        let alert = UIAlertController(
+            title: "Выход из аккаунта",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        
+        let agreeAction = UIAlertAction(
+            title: "Да",
+            style: .default
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.onLogout()
+            }
+        }
+        
+        let dismissAction = UIAlertAction(
+            title: "Отмена",
+            style: .default
+        )
+        
+        alert.addAction(agreeAction)
+        alert.addAction(dismissAction)
+        
+        present(alert, animated: true)
+    }
+    
+//    func createGradient(width: CGFloat, height: CGFloat, cornerRadius: CGFloat) -> CAGradientLayer {
+//        let gradient = CAGradientLayer()
+//        gradient.frame = CGRect(origin: .zero, size: CGSize(width: width, height: height))
+//        gradient.locations = [0, 0.1, 0.3]
+//        gradient.colors = [
+//            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+//            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+//            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+//        ]
+//        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+//        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+//        gradient.cornerRadius = cornerRadius
+//        gradient.masksToBounds = true
+//
+//        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+//        gradientChangeAnimation.duration = 1.0
+//        gradientChangeAnimation.repeatCount = .infinity
+//        gradientChangeAnimation.fromValue = [0, 0.1, 0.3]
+//        gradientChangeAnimation.toValue = [0, 0.8, 1]
+//        gradient.add(gradientChangeAnimation, forKey: "locationsChange")
+//
+//        return gradient
+//    }
+//
+//    func removeGradient(gradient: CAGradientLayer) {
+//        gradient.removeFromSuperlayer()
+//    }
 }

@@ -31,7 +31,6 @@ final class SingleImageViewController: UIViewController {
     private func setImage() {
         UIBlockingProgressHUD.show()
         imageView.kf.setImage(with: imageURL) { [weak self] result in
-            UIBlockingProgressHUD.dismiss()
             guard let self = self else { return }
             switch result {
             case .success(let imageResult):
@@ -39,6 +38,7 @@ final class SingleImageViewController: UIViewController {
             case .failure:
                 self.displayAlert()
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
     
@@ -86,14 +86,14 @@ extension SingleImageViewController {
         )
         
         let dismissAction = UIAlertAction(
-            title: "Не надо",
+            title: "Отмена",
             style: .default
         ) { _ in
             alert.dismiss(animated: true)
         }
         
         let retryAction = UIAlertAction(
-            title: "Попробовать ещё раз?",
+            title: "Да",
             style: .default
         ) { [weak self] _ in
             guard let self = self else { return }
