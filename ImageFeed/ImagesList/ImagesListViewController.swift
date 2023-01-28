@@ -42,7 +42,7 @@ class ImagesListViewController: UIViewController {
         if oldCount != newCount {
             tableView.performBatchUpdates {
                 let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
-                tableView.insertRows(at: indexPaths, with: .automatic)
+                tableView.insertRows(at: indexPaths, with: .bottom)
             } completion: { _ in }
         }
     }
@@ -51,15 +51,9 @@ class ImagesListViewController: UIViewController {
         if segue.identifier == ShowSingleImageSegueIdentifier {
             let viewController = segue.destination as! SingleImageViewController
             let indexPath = sender as! IndexPath
-            let image = UIImage(named: "stubPlaceholder")
-            
             let photo = photos[indexPath.row]
             guard let imageURL = URL(string: photo.largeImageURL) else { return }
-            
-            image?.images.kf.indicatorType = .activity
-            image?.kf.setImage(with: imageURL, placeholder: UIImage(named: "stubPlaceholder"))
-            
-            viewController.image = image
+            viewController.imageURL = imageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -81,12 +75,13 @@ extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
-        guard let imageListCell = cell as? ImagesListCell else {
+        guard let imagesListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
+        imagesListCell.delegate = self
         
-        configCell(for: imageListCell, with: indexPath)
-        return imageListCell
+        configCell(for: imagesListCell, with: indexPath)
+        return imagesListCell
     }
     
 }
@@ -102,7 +97,8 @@ extension ImagesListViewController {
         
         let date = dateFormatter.date(from: photo.createdAt!)
         cell.dateLabel.text = dateFormatter.string(from: date ?? Date())
-        cell.likeButton.imageView?.image = indexPath.row % 2 == 1 ? UIImage(named: "Active") : UIImage(named: "No Active")
+        
+        cell.setIsLiked(isLiked: photo.isLiked)
     }
 }
 
@@ -110,6 +106,32 @@ extension ImagesListViewController {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
             imagesListService.fetchPhotosNextPage()
+        }
+    }
+}
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked, indexPath: indexPath.row) { [weak cell, weak self] response in
+            guard let cell = cell,
+                  let self = self
+            else { return }
+            
+            print("response", response)
+            switch response {
+            case .success(let photo):
+                DispatchQueue.main.async {
+                    self.photos[indexPath.row].isLiked = photo.isLiked
+                    cell.setIsLiked(isLiked: photo.isLiked)
+                }
+            case .failure(let error):
+                print(error)
+            }
+            UIBlockingProgressHUD.dismiss()
         }
     }
 }

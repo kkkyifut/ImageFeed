@@ -1,11 +1,11 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage! {
+    var imageURL: URL! {
         didSet {
             guard isViewLoaded else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
+            setImage()
         }
     }
     
@@ -17,16 +17,29 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction private func didTapShareButton() {
-        let share = UIActivityViewController(activityItems: [image as UIImage], applicationActivities: nil)
+        let share = UIActivityViewController(activityItems: [imageView.image], applicationActivities: nil)
         present(share, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = image
-        scrollView.minimumZoomScale = 0.5
-        scrollView.maximumZoomScale = 2
-        rescaleAndCenterImageInScrollView(image: image)
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.5
+        setImage()
+    }
+    
+    private func setImage() {
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure:
+                self.displayAlert()
+            }
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -62,4 +75,33 @@ extension SingleImageViewController: UIScrollViewDelegate {
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
 
+}
+
+extension SingleImageViewController {
+    private func displayAlert() {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Попробовать ещё раз?",
+            preferredStyle: .alert
+        )
+        
+        let dismissAction = UIAlertAction(
+            title: "Не надо",
+            style: .default
+        ) { _ in
+            alert.dismiss(animated: true)
+        }
+        
+        let retryAction = UIAlertAction(
+            title: "Попробовать ещё раз?",
+            style: .default
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.setImage()
+        }
+        alert.addAction(dismissAction)
+        alert.addAction(retryAction)
+        
+        self.present(alert, animated: true)
+    }
 }

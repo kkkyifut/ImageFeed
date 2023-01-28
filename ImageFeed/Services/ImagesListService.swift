@@ -13,16 +13,17 @@ final class ImagesListService {
     
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
+        if task != nil { return }
         lastLoadedPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
         let request = makeRequest(token: storageToken.token!, page: lastLoadedPage!)
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
+            guard let self = self else { return }
             switch result {
             case .success(let photos):
                 for photo in photos {
                     let photo = Photo(decodedData: photo)
-                    self?.photos.append(photo)
-//                    print("photo", photo)
+                    self.photos.append(photo)
                 }
                 NotificationCenter.default.post(
                     name: ImagesListService.DidChangeNotification,
@@ -31,6 +32,7 @@ final class ImagesListService {
             case .failure(let error):
                 print(error)
             }
+            self.task = nil
         }
         self.task = task
         task.resume()
@@ -40,8 +42,40 @@ final class ImagesListService {
         guard let url = URL(string: defaultBaseURL + "photos?page=\(page)") else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("urlMakeRequest", url)
         return request
+    }
+}
+
+extension ImagesListService {
+    enum LikeServiceError: Error {
+        case raceCondition
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, indexPath: Int, _ completion: @escaping (Result<Photo, Error>) -> Void) {
+        if task != nil {
+            completion(.failure(LikeServiceError.raceCondition))
+            return
+        }
+        
+        guard let url = URL(string: defaultBaseURL + "photos/\(photoId)/like") else { fatalError("Failed to create URL") }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        let session = URLSession.shared
+        let task = session.objectTask(for: request) { [weak self] (result: Result<Photo, Error>) in
+            guard let self = self else { return }
+            print("self", self)
+            switch result {
+            case .success(let photo):
+                self.photos[indexPath].isLiked = photo.isLiked
+                completion(.success(photo))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+            self.task = nil
+        }
+        self.task = task
+        task.resume()
     }
 }
 
@@ -70,7 +104,7 @@ struct Photo: Codable {
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
-    let isLiked: Bool
+    var isLiked: Bool
     
     init(decodedData: PhotoResult) {
         self.id = decodedData.id
