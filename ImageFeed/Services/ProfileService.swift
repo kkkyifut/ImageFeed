@@ -10,16 +10,20 @@ final class ProfileService {
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
+        task?.cancel()
+        
         let request = makeRequest(token: token)
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
-            switch result {
-            case .success(let decodedObject):
-                let profile = Profile(decodedData: decodedObject)
-                self?.profile = profile
-                completion(.success(profile))
-            case .failure(let error):
-                completion(.failure(error))
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let decodedObject):
+                    let profile = Profile(decodedData: decodedObject)
+                    self?.profile = profile
+                    completion(.success(profile))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
         self.task = task

@@ -14,23 +14,31 @@ final class ImagesListService {
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         if task != nil { return }
-        lastLoadedPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
-        let request = makeRequest(token: storageToken.token!, page: lastLoadedPage!)
+        
+        if var lastLoadedPage {
+            self.lastLoadedPage! += 1
+        } else {
+            self.lastLoadedPage = 1
+        }
+        let token = storageToken.token ?? ""
+        let page = lastLoadedPage ?? 1
+        let request = makeRequest(token: token, page: page)
+
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self = self else { return }
-            switch result {
-            case .success(let photos):
-                for photo in photos {
-                    let photo = Photo(decodedData: photo)
-                    self.photos.append(photo)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let photos):
+                    let photoViewModels = photos.map { Photo(decodedData: $0) }
+                    self.photos.append(contentsOf: photoViewModels)
+                    NotificationCenter.default.post(
+                        name: ImagesListService.DidChangeNotification,
+                        object: self
+                    )
+                case .failure(let error):
+                    print(error)
                 }
-                NotificationCenter.default.post(
-                    name: ImagesListService.DidChangeNotification,
-                    object: self
-                )
-            case .failure(let error):
-                print(error)
             }
             self.task = nil
         }
@@ -57,7 +65,9 @@ extension ImagesListService {
             return
         }
         
-        let request = makeLikeRequest(token: storageToken.token!, photoId: photoId, isLike: isLike)
+        let token = storageToken.token ?? ""
+        let request = makeLikeRequest(token: token, photoId: photoId, isLike: isLike)
+        
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
             guard let self = self else { return }

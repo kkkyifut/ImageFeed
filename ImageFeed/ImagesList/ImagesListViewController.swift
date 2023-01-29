@@ -10,10 +10,9 @@ class ImagesListViewController: UIViewController {
     private let animationGradient = AnimationGradient.shared
     var photos: [Photo] = []
     
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
+    private lazy var dateFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = .withFullDate
         return formatter
     }()
     
@@ -27,6 +26,11 @@ class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         gradient = animationGradient.createGradient(width: 343, height: 370, cornerRadius: 16)
+        imagesListService.fetchPhotosNextPage()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         imagesListServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.DidChangeNotification,
             object: nil,
@@ -35,7 +39,11 @@ class ImagesListViewController: UIViewController {
                 self.updateTableViewAnimated()
                 self.animationGradient.removeGradient(gradient: self.gradient)
             }
-        imagesListService.fetchPhotosNextPage()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: ImagesListService.DidChangeNotification, object: nil)
     }
     
     private func updateTableViewAnimated() {
@@ -99,7 +107,7 @@ extension ImagesListViewController {
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "stubPlaceholder"))
         
-        let date = dateFormatter.date(from: photo.createdAt!)
+        let date = dateFormatter.date(from: photo.createdAt ?? String())
         cell.dateLabel.text = dateFormatter.string(from: date ?? Date())
         
         cell.setIsLiked(isLiked: photo.isLiked)
@@ -125,16 +133,17 @@ extension ImagesListViewController: ImagesListCellDelegate {
                   let self = self
             else { return }
             
-            switch response {
-            case .success(let photo):
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch response {
+                case .success(let photo):
                     self.photos[indexPath.row].isLiked = photo.isLiked
                     cell.setIsLiked(isLiked: photo.isLiked)
+                    UIBlockingProgressHUD.dismiss()
+                case .failure(let error):
+                    print(error)
+                    UIBlockingProgressHUD.dismiss()
                 }
-            case .failure(let error):
-                print(error)
             }
-            UIBlockingProgressHUD.dismiss()
         }
     }
 }
