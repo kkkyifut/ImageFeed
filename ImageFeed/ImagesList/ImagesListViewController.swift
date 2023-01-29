@@ -33,7 +33,7 @@ class ImagesListViewController: UIViewController {
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }
                 self.updateTableViewAnimated()
-                animationGradient.removeGradient(gradient: self.gradient)
+                self.animationGradient.removeGradient(gradient: self.gradient)
             }
         imagesListService.fetchPhotosNextPage()
     }
@@ -42,7 +42,6 @@ class ImagesListViewController: UIViewController {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
         photos = imagesListService.photos
-        print(photos)
         if oldCount != newCount {
             tableView.performBatchUpdates {
                 let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
@@ -117,16 +116,15 @@ extension ImagesListViewController {
 
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        UIBlockingProgressHUD.show()
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
         
-        UIBlockingProgressHUD.show()
         imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked, indexPath: indexPath.row) { [weak cell, weak self] response in
             guard let cell = cell,
                   let self = self
             else { return }
             
-            print("response", response)
             switch response {
             case .success(let photo):
                 DispatchQueue.main.async {

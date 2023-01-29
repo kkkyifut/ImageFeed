@@ -57,18 +57,14 @@ extension ImagesListService {
             return
         }
         
-        guard let url = URL(string: defaultBaseURL + "photos/\(photoId)/like") else { fatalError("Failed to create URL") }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = isLike ? "POST" : "DELETE"
+        let request = makeLikeRequest(token: storageToken.token!, photoId: photoId, isLike: isLike)
         let session = URLSession.shared
-        let task = session.objectTask(for: request) { [weak self] (result: Result<Photo, Error>) in
+        let task = session.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
             guard let self = self else { return }
-            print("self", self)
             switch result {
-            case .success(let photo):
-                self.photos[indexPath].isLiked = photo.isLiked
-                completion(.success(photo))
+            case .success(let photoResult):
+                self.photos[indexPath].isLiked = photoResult.photo.isLiked
+                completion(.success(Photo(decodedData: photoResult.photo)))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -77,20 +73,29 @@ extension ImagesListService {
         self.task = task
         task.resume()
     }
+    
+    private func makeLikeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest {
+        guard let url = URL(string: defaultBaseURL + "photos/\(photoId)/like") else { fatalError("Failed to create URL") }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        return request
+    }
 }
 
-struct PhotoResult: Codable {
+struct LikePhotoResult: Decodable {
+    let photo: PhotoResult
+}
+
+struct PhotoResult: Decodable {
     let id: String
     let welcomeDescription: String?
     let urls: [String: String]
-//    let size: CGSize
     let createdAt: String?
     let isLiked: Bool
 
     enum CodingKeys: String, CodingKey {
-        case id
-        case urls
-//        case size
+        case id, urls
         case createdAt = "created_at"
         case welcomeDescription = "description"
         case isLiked = "liked_by_user"
@@ -99,7 +104,6 @@ struct PhotoResult: Codable {
 
 struct Photo: Codable {
     let id: String
-//    let size: CGSize
     let createdAt: String?
     let welcomeDescription: String?
     let thumbImageURL: String
@@ -108,7 +112,6 @@ struct Photo: Codable {
     
     init(decodedData: PhotoResult) {
         self.id = decodedData.id
-//        self.size = decodedData.size
         self.createdAt = decodedData.createdAt
         self.welcomeDescription = decodedData.welcomeDescription
         self.thumbImageURL = decodedData.urls[UrlsResult.CodingKeys.thumbImageURL.rawValue]!
