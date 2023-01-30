@@ -11,16 +11,25 @@ final class ImagesListService {
     
     init() {}
     
+    enum ServiceError: Error {
+        case emptyToken
+    }
+
     func fetchPhotosNextPage() {
+        
         assert(Thread.isMainThread)
         if task != nil { return }
         
-        if var lastLoadedPage {
-            self.lastLoadedPage! += 1
+        if lastLoadedPage != nil {
+            lastLoadedPage! += 1
         } else {
-            self.lastLoadedPage = 1
+            lastLoadedPage = 1
         }
-        let token = storageToken.token ?? ""
+        
+        guard let token = storageToken.token else {
+            print(ServiceError.emptyToken)
+            return
+        }
         let page = lastLoadedPage ?? 1
         let request = makeRequest(token: token, page: page)
 
@@ -65,7 +74,10 @@ extension ImagesListService {
             return
         }
         
-        let token = storageToken.token ?? ""
+        guard let token = storageToken.token else {
+            completion(.failure(ServiceError.emptyToken))
+            return
+        }
         let request = makeLikeRequest(token: token, photoId: photoId, isLike: isLike)
         
         let session = URLSession.shared
@@ -99,13 +111,15 @@ struct LikePhotoResult: Decodable {
 
 struct PhotoResult: Decodable {
     let id: String
+    let width: CGFloat
+    let height: CGFloat
     let welcomeDescription: String?
     let urls: [String: String]
     let createdAt: String?
     let isLiked: Bool
 
     enum CodingKeys: String, CodingKey {
-        case id, urls
+        case id, urls, width, height
         case createdAt = "created_at"
         case welcomeDescription = "description"
         case isLiked = "liked_by_user"
@@ -114,6 +128,8 @@ struct PhotoResult: Decodable {
 
 struct Photo: Codable {
     let id: String
+    let width: CGFloat
+    let height: CGFloat
     let createdAt: String?
     let welcomeDescription: String?
     let thumbImageURL: String
@@ -122,6 +138,8 @@ struct Photo: Codable {
     
     init(decodedData: PhotoResult) {
         self.id = decodedData.id
+        self.width = decodedData.width
+        self.height = decodedData.height
         self.createdAt = decodedData.createdAt
         self.welcomeDescription = decodedData.welcomeDescription
         self.thumbImageURL = decodedData.urls[UrlsResult.CodingKeys.thumbImageURL.rawValue]!

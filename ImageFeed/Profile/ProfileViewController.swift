@@ -8,7 +8,7 @@ final class ProfileViewController: UIViewController {
     private var gradientName: CAGradientLayer!
     private var gradientLogin: CAGradientLayer!
     private var gradientDescription: CAGradientLayer!
-    private let animationGradient = AnimationGradient.shared
+    private let animationGradient = AnimationGradientFactory.shared
     
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "avatar"))
@@ -58,7 +58,7 @@ final class ProfileViewController: UIViewController {
             case .failure(let error):
                 print(error)
             }
-            animationGradient.removeGradient(gradient: gradientAvatar)
+            gradientAvatar.removeFromSuperlayer()
         }
     }
     
@@ -67,9 +67,9 @@ final class ProfileViewController: UIViewController {
         loginLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
         
-        animationGradient.removeGradient(gradient: gradientName)
-        animationGradient.removeGradient(gradient: gradientLogin)
-        animationGradient.removeGradient(gradient: gradientDescription)
+        gradientName.removeFromSuperlayer()
+        gradientLogin.removeFromSuperlayer()
+        gradientDescription.removeFromSuperlayer()
     }
     
     private func createProfileImageAndLogin() {

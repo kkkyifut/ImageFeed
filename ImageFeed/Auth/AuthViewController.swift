@@ -39,9 +39,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 }
             }
         }
-        let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
-        UIApplication.shared.windows.first?.rootViewController = tabBarViewController
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
     
     private func fetchProfile(token: String) {
@@ -49,6 +46,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             guard self != nil else { return }
             switch result {
             case .success:
+                self?.transitionToTabBar()
                 UIBlockingProgressHUD.dismiss()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
@@ -56,6 +54,12 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 break
             }
         }
+    }
+    
+    private func transitionToTabBar() {
+        let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
+        UIApplication.shared.windows.first?.rootViewController = tabBarViewController
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {

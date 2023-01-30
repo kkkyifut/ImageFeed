@@ -6,8 +6,8 @@ class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
     private let storageToken = OAuth2TokenStorage()
     private var imagesListServiceObserver: NSObjectProtocol?
-    private var gradient: CAGradientLayer!
-    private let animationGradient = AnimationGradient.shared
+//    private var gradient: CAGradientLayer!
+    private let animationGradient = AnimationGradientFactory.shared
     var photos: [Photo] = []
     
     private lazy var dateFormatter: ISO8601DateFormatter = {
@@ -25,7 +25,6 @@ class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        gradient = animationGradient.createGradient(width: 343, height: 370, cornerRadius: 16)
         imagesListService.fetchPhotosNextPage()
     }
     
@@ -37,7 +36,6 @@ class ImagesListViewController: UIViewController {
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }
                 self.updateTableViewAnimated()
-                self.animationGradient.removeGradient(gradient: self.gradient)
             }
     }
     
@@ -103,14 +101,32 @@ extension ImagesListViewController {
         let photo = photos[indexPath.row]
         guard let imageURL = URL(string: photo.thumbImageURL) else { return }
         
+        let offsetX: CGFloat = 20
+        let offsetY: CGFloat = 3
+        let cornerRadius: CGFloat = cell.cellImage.layer.cornerRadius
+        
+        let gradient = animationGradient.createGradient(
+            width: cell.frame.width - offsetX * 2,
+            height: cell.frame.height - offsetY * 2,
+            offsetX: offsetX, offsetY: offsetY, cornerRadius: cornerRadius)
         cell.layer.addSublayer(gradient)
+        
         cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "stubPlaceholder"))
+        cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "stubPlaceholder")) { _ in
+            gradient.removeFromSuperlayer()
+        }
         
         let date = dateFormatter.date(from: photo.createdAt ?? String())
         cell.dateLabel.text = dateFormatter.string(from: date ?? Date())
         
         cell.setIsLiked(isLiked: photo.isLiked)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let cell = photos[indexPath.row]
+        let imageSize = CGSize(width: cell.width, height: cell.height)
+        let aspectRatio = imageSize.width / imageSize.height
+        return tableView.frame.width / aspectRatio
     }
 }
 

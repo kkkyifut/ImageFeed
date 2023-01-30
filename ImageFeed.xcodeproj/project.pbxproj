@@ -10,7 +10,7 @@
 		CC066012294B60420076C1DF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC066011294B60420076C1DF /* Constants.swift */; };
 		CC19CED2294C8C2000747CC4 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC19CED1294C8C2000747CC4 /* AuthViewController.swift */; };
 		CC19CED5294C8D8300747CC4 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC19CED4294C8D8300747CC4 /* WebViewViewController.swift */; };
-		CC3FA4932985A9960067D139 /* AnimationGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA4922985A9960067D139 /* AnimationGradient.swift */; };
+		CC3FA4932985A9960067D139 /* AnimationGradientFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA4922985A9960067D139 /* AnimationGradientFactory.swift */; };
 		CC513330295DCF3E0093354D /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = CC51332F295DCF3E0093354D /* ProgressHUD */; };
 		CC513332295EE29F0093354D /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC513331295EE29F0093354D /* UIBlockingProgressHUD.swift */; };
 		CC513334295EE8FC0093354D /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC513333295EE8FC0093354D /* ProfileService.swift */; };
@@ -41,7 +41,7 @@
 		CC066011294B60420076C1DF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		CC19CED1294C8C2000747CC4 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		CC19CED4294C8D8300747CC4 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
-		CC3FA4922985A9960067D139 /* AnimationGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationGradient.swift; sourceTree = "<group>"; };
+		CC3FA4922985A9960067D139 /* AnimationGradientFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationGradientFactory.swift; sourceTree = "<group>"; };
 		CC513331295EE29F0093354D /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		CC513333295EE8FC0093354D /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		CC513335296032030093354D /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				CC513338296068E30093354D /* URLSession.swift */,
-				CC3FA4922985A9960067D139 /* AnimationGradient.swift */,
+				CC3FA4922985A9960067D139 /* AnimationGradientFactory.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -293,7 +293,7 @@
 				CC066012294B60420076C1DF /* Constants.swift in Sources */,
 				CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */,
 				CC8376E0294E3BDA00A7FCF9 /* OAuth2TokenStorage.swift in Sources */,
-				CC3FA4932985A9960067D139 /* AnimationGradient.swift in Sources */,
+				CC3FA4932985A9960067D139 /* AnimationGradientFactory.swift in Sources */,
 				CCD5067C294F46F500F88C7C /* SplashViewController.swift in Sources */,
 				CC19CED2294C8C2000747CC4 /* AuthViewController.swift in Sources */,
 				CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */,
