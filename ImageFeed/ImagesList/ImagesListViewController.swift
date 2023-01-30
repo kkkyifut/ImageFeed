@@ -6,7 +6,6 @@ class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
     private let storageToken = OAuth2TokenStorage()
     private var imagesListServiceObserver: NSObjectProtocol?
-//    private var gradient: CAGradientLayer!
     private let animationGradient = AnimationGradientFactory.shared
     var photos: [Photo] = []
     
