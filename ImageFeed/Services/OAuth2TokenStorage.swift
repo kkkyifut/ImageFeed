@@ -37,4 +37,8 @@ final class OAuth2TokenStorage {
             return
         }
     }
+    
+    func clearToken() {
+        keychainStorage.removeAllKeys()
+    }
 }

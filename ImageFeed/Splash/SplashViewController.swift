@@ -25,11 +25,12 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard storageToken.token != nil else {
+        guard let token = storageToken.token else {
             showNextScreen(withID: "AuthViewController")
             return
         }
-        fetchProfile(token: storageToken.token!)
+
+        fetchProfile(token: token)
     }
     
     private func showNextScreen(withID screenID: String) {
@@ -42,6 +43,7 @@ final class SplashViewController: UIViewController {
         profileService.fetchProfile(token) { [weak self] result in
             DispatchQueue.main.async { [self] in
                 guard let self = self else { return }
+
                 switch result {
                 case .success:
                     self.profileImageService.fetchProfileImageURL(username: (self.profileService.profile?.username)!) { _ in
@@ -60,7 +62,5 @@ final class SplashViewController: UIViewController {
                 }
             }
         }
-            
-//        }
     }
 }

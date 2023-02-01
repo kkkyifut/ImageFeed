@@ -32,16 +32,12 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     let data = try result.get()
                     storageToken.token = data
                     self.fetchProfile(token: storageToken.token!)
-                    UIBlockingProgressHUD.dismiss()
                 } catch let error {
                     print("Error: ", error)
-                    UIBlockingProgressHUD.dismiss()
                 }
+                UIBlockingProgressHUD.dismiss()
             }
         }
-        let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
-        UIApplication.shared.windows.first?.rootViewController = tabBarViewController
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
     
     private func fetchProfile(token: String) {
@@ -49,6 +45,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             guard self != nil else { return }
             switch result {
             case .success:
+                self?.transitionToTabBar()
                 UIBlockingProgressHUD.dismiss()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
@@ -56,6 +53,12 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 break
             }
         }
+    }
+    
+    private func transitionToTabBar() {
+        let tabBarViewController = storyboardInstance.instantiateViewController(withIdentifier: "TabBarViewController")
+        UIApplication.shared.windows.first?.rootViewController = tabBarViewController
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
