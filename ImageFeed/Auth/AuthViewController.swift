@@ -32,11 +32,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     let data = try result.get()
                     storageToken.token = data
                     self.fetchProfile(token: storageToken.token!)
-                    UIBlockingProgressHUD.dismiss()
                 } catch let error {
                     print("Error: ", error)
-                    UIBlockingProgressHUD.dismiss()
                 }
+                UIBlockingProgressHUD.dismiss()
             }
         }
     }
