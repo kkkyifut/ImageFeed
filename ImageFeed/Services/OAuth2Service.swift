@@ -31,11 +31,11 @@ final class OAuth2Service {
     }
     
     private func makeRequest(code: String) -> URLRequest {
-        var urlComponents = URLComponents(string: unsplashTokenURLString)!
+        var urlComponents = URLComponents(string: UnsplashTokenURLString)!
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "client_secret", value: secretKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "client_id", value: AccessKey),
+            URLQueryItem(name: "client_secret", value: SecretKey),
+            URLQueryItem(name: "redirect_uri", value: RedirectURI),
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "grant_type", value: "authorization_code"),
         ]
