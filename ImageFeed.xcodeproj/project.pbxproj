@@ -14,6 +14,8 @@
 		CC3FA586299261070067D139 /* WebViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA585299261070067D139 /* WebViewPresenter.swift */; };
 		CC3FA588299276090067D139 /* AuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA587299276090067D139 /* AuthHelper.swift */; };
 		CC3FA5902992BEB80067D139 /* WebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA58F2992BEB80067D139 /* WebViewTests.swift */; };
+		CC3FA5992993B7280067D139 /* ProfileViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA5982993B7280067D139 /* ProfileViewPresenter.swift */; };
+		CC3FA59B2994170A0067D139 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3FA59A2994170A0067D139 /* ProfileTests.swift */; };
 		CC513330295DCF3E0093354D /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = CC51332F295DCF3E0093354D /* ProgressHUD */; };
 		CC513332295EE29F0093354D /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC513331295EE29F0093354D /* UIBlockingProgressHUD.swift */; };
 		CC513334295EE8FC0093354D /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC513333295EE8FC0093354D /* ProfileService.swift */; };
@@ -59,6 +61,8 @@
 		CC3FA587299276090067D139 /* AuthHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHelper.swift; sourceTree = "<group>"; };
 		CC3FA58D2992BEB80067D139 /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC3FA58F2992BEB80067D139 /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
+		CC3FA5982993B7280067D139 /* ProfileViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPresenter.swift; sourceTree = "<group>"; };
+		CC3FA59A2994170A0067D139 /* ProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTests.swift; sourceTree = "<group>"; };
 		CC513331295EE29F0093354D /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		CC513333295EE8FC0093354D /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		CC513335296032030093354D /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
@@ -119,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				CC3FA58F2992BEB80067D139 /* WebViewTests.swift */,
+				CC3FA59A2994170A0067D139 /* ProfileTests.swift */,
 			);
 			path = ImageFeedTests;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				CCDF239A2939277200AD7261 /* ProfileViewController.swift */,
+				CC3FA5982993B7280067D139 /* ProfileViewPresenter.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC3FA5902992BEB80067D139 /* WebViewTests.swift in Sources */,
+				CC3FA59B2994170A0067D139 /* ProfileTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +382,7 @@
 				CC513336296032030093354D /* ProfileImageService.swift in Sources */,
 				CC64D9E0293BBD0C00F02094 /* SingleImageViewController.swift in Sources */,
 				CC19CED5294C8D8300747CC4 /* WebViewViewController.swift in Sources */,
+				CC3FA5992993B7280067D139 /* ProfileViewPresenter.swift in Sources */,
 				CC7241D8297C2C3800DC6A6B /* ImagesListService.swift in Sources */,
 				CC3FA586299261070067D139 /* WebViewPresenter.swift in Sources */,
 				CC8376DE294E3A5F00A7FCF9 /* OAuth2Service.swift in Sources */,
