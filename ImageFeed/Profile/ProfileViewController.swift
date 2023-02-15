@@ -9,7 +9,6 @@ public protocol ProfileViewControllerProtocol: AnyObject {
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     private let profileService = ProfileService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
     private var gradientAvatar: CAGradientLayer!
     private var gradientName: CAGradientLayer!
     private var gradientLogin: CAGradientLayer!
