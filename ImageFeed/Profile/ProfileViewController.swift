@@ -105,17 +105,14 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     }
     
     private func createProfileImageAndLogin() {
-//        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(avatarImageView)
         gradientAvatar = animationGradient.createGradient(width: 70, height: 70, cornerRadius: 35)
         self.avatarImageView.layer.addSublayer(gradientAvatar)
         
-//        nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         gradientName = animationGradient.createGradient(width: 223, height: 23, cornerRadius: 11.5)
         self.nameLabel.layer.addSublayer(gradientName)
         
-//        loginLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginLabel)
         gradientLogin = animationGradient.createGradient(width: 89, height: 18, cornerRadius: 9)
         self.loginLabel.layer.addSublayer(gradientLogin)
@@ -152,6 +149,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
             target: self,
             action: #selector(Self.didTapLogoutButton))
         exitButton.tintColor = UIColor(named: "YP Red")
+        exitButton.accessibilityIdentifier = "logout button"
         exitButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(exitButton)
         self.logoutButton = exitButton
