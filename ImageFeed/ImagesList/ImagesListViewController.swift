@@ -1,11 +1,15 @@
 import UIKit
 import Kingfisher
 
-class ImagesListViewController: UIViewController {
+protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol { get set }
+    func updateTableViewAnimated()
+}
+
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
     private let storageToken = OAuth2TokenStorage()
-    private var imagesListServiceObserver: NSObjectProtocol?
     private let animationGradient = AnimationGradientFactory.shared
     var photos: [Photo] = []
     
@@ -14,6 +18,10 @@ class ImagesListViewController: UIViewController {
         formatter.formatOptions = .withFullDate
         return formatter
     }()
+    
+    lazy var presenter: ImagesListPresenterProtocol = {
+        return ImagesListPresenter()
+    } ()
     
     @IBOutlet private var tableView: UITableView!
     
@@ -24,18 +32,12 @@ class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        imagesListService.fetchPhotosNextPage()
+        presenter.view = self
+        presenter.viewDidLoad()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.DidChangeNotification,
-            object: nil,
-            queue: .main) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateTableViewAnimated()
-            }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -43,7 +45,7 @@ class ImagesListViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: ImagesListService.DidChangeNotification, object: nil)
     }
     
-    private func updateTableViewAnimated() {
+    internal func updateTableViewAnimated() {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
         photos = imagesListService.photos

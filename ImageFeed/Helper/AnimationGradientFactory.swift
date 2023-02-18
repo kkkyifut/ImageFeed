@@ -1,11 +1,11 @@
 import UIKit
 
-class AnimationGradientFactory {
+final class AnimationGradientFactory {
     static let shared = AnimationGradientFactory()
     
     func createGradient(width: CGFloat, height: CGFloat, offsetX: CGFloat = 0, offsetY: CGFloat = 0, cornerRadius: CGFloat) -> CAGradientLayer {
         let gradient = CAGradientLayer()
-        gradient.frame = CGRect(x: CGFloat(.zero + offsetX), y: CGFloat(.zero + offsetY), width: width, height: height)
+        gradient.frame = CGRect(x: .zero + offsetX, y: .zero + offsetY, width: width, height: height)
         gradient.locations = [0, 0.1, 0.3]
         gradient.colors = [
             UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
