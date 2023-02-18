@@ -56,7 +56,7 @@ final class ImagesListService {
     }
     
     private func makeRequest(token: String, page: Int) -> URLRequest {
-        guard let url = URL(string: DefaultBaseURL + "photos?page=\(page)") else { fatalError("Failed to create URL") }
+        guard let url = URL(string: defaultBaseURLString + "photos?page=\(page)") else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
@@ -97,7 +97,7 @@ extension ImagesListService {
     }
     
     private func makeLikeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest {
-        guard let url = URL(string: DefaultBaseURL + "photos/\(photoId)/like") else { fatalError("Failed to create URL") }
+        guard let url = URL(string: defaultBaseURLString + "photos/\(photoId)/like") else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = isLike ? "POST" : "DELETE"

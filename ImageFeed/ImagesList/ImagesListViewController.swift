@@ -6,7 +6,7 @@ protocol ImagesListViewControllerProtocol: AnyObject {
     func updateTableViewAnimated()
 }
 
-class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
     private let storageToken = OAuth2TokenStorage()

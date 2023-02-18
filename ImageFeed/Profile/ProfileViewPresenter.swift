@@ -2,7 +2,7 @@ import UIKit
 import Kingfisher
 import WebKit
 
-public protocol ProfileViewPresenterProtocol {
+protocol ProfileViewPresenterProtocol {
     var view: ProfileViewControllerProtocol? { get set }
     func viewDidLoad()
     func makeAlert() -> UIAlertController

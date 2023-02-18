@@ -1,6 +1,6 @@
 import UIKit
 
-class AnimationGradientFactory {
+final class AnimationGradientFactory {
     static let shared = AnimationGradientFactory()
     
     func createGradient(width: CGFloat, height: CGFloat, offsetX: CGFloat = 0, offsetY: CGFloat = 0, cornerRadius: CGFloat) -> CAGradientLayer {

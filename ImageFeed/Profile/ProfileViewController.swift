@@ -1,7 +1,7 @@
 import UIKit
 import Kingfisher
 
-public protocol ProfileViewControllerProtocol: AnyObject {
+protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfileViewPresenterProtocol { get set }
     func updateAvatar()
     func onLogout()
