@@ -59,22 +59,29 @@ extension SingleImageViewController: UIScrollViewDelegate {
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
-        let minZoomScale = scrollView.minimumZoomScale
-        let maxZoomScale = scrollView.maximumZoomScale
-        view.layoutIfNeeded()
         let visibleRectSize = scrollView.bounds.size
         let imageSize = image.size
+
+        // Calculate the scale needed to fit the entire image within the scroll view
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
-        let scale = min(maxZoomScale, max(minZoomScale, max(hScale, vScale)))
-        scrollView.setZoomScale(scale, animated: false)
-        scrollView.layoutIfNeeded()
-        let newContentSize = scrollView.contentSize
-        let x = (newContentSize.width - visibleRectSize.width) / 2
-        let y = (newContentSize.height - visibleRectSize.height) / 2
-        scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
-    }
+        let initialScale = min(hScale, vScale)
 
+        // Set the minimum and maximum zoom scales
+        scrollView.minimumZoomScale = initialScale
+        scrollView.maximumZoomScale = max(initialScale * 4, 1.0) // Adjust as needed
+
+        // Set the initial zoom scale and content size
+        scrollView.zoomScale = initialScale
+        scrollView.contentSize = imageSize
+        view.layoutIfNeeded()
+        scrollView.layoutIfNeeded()
+
+        // Center the image within the scroll view
+        let offsetX = max((scrollView.bounds.width - scrollView.contentSize.width) * 0.5, 0)
+        let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) * 0.5, 0)
+        scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: 0, right: 0)
+    }
 }
 
 extension SingleImageViewController {

@@ -32,6 +32,7 @@
 		CCD191B929292116004E6439 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD191B829292116004E6439 /* ImagesListCell.swift */; };
 		CCD50679294E462100F88C7C /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD50678294E462100F88C7C /* OAuthTokenResponseBody.swift */; };
 		CCD5067C294F46F500F88C7C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD5067B294F46F500F88C7C /* SplashViewController.swift */; };
+		CCD64FE62B0BAD26009A2BEE /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD64FE52B0BAD26009A2BEE /* Notifications.swift */; };
 		CCDD5B2D2979A81C00D7DAAF /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDD5B2C2979A81C00D7DAAF /* TabBarController.swift */; };
 		CCDF239B2939277200AD7261 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDF239A2939277200AD7261 /* ProfileViewController.swift */; };
 		CCE4E943299D62C0009F9097 /* ImagesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE4E942299D62C0009F9097 /* ImagesListPresenter.swift */; };
@@ -87,6 +88,7 @@
 		CCD191B829292116004E6439 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		CCD50678294E462100F88C7C /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
 		CCD5067B294F46F500F88C7C /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		CCD64FE52B0BAD26009A2BEE /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		CCDD5B2C2979A81C00D7DAAF /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		CCDF239A2939277200AD7261 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CCE4E942299D62C0009F9097 /* ImagesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenter.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				CC513338296068E30093354D /* URLSession.swift */,
 				CC3FA4922985A9960067D139 /* AnimationGradientFactory.swift */,
 				CC3FA587299276090067D139 /* AuthHelper.swift */,
+				CCD64FE52B0BAD26009A2BEE /* Notifications.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				CCEB357429269DDA003D1627 /* AppDelegate.swift in Sources */,
 				CC513336296032030093354D /* ProfileImageService.swift in Sources */,
 				CC64D9E0293BBD0C00F02094 /* SingleImageViewController.swift in Sources */,
+				CCD64FE62B0BAD26009A2BEE /* Notifications.swift in Sources */,
 				CC19CED5294C8D8300747CC4 /* WebViewViewController.swift in Sources */,
 				CC3FA5992993B7280067D139 /* ProfileViewPresenter.swift in Sources */,
 				CC7241D8297C2C3800DC6A6B /* ImagesListService.swift in Sources */,
@@ -703,11 +707,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ImageFeed/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -716,6 +719,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kyifut.ImageFeed;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -733,11 +739,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ImageFeed/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -746,6 +751,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kyifut.ImageFeed;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -807,7 +815,7 @@
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
 			requirement = {
 				kind = exactVersion;
-				version = 7.4.1;
+				version = 7.10.0;
 			};
 		};
 		CC51333D2961B81B0093354D /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {

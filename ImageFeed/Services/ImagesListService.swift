@@ -1,7 +1,6 @@
 import UIKit
 
 final class ImagesListService {
-    static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     static let shared = ImagesListService()
     private let storageToken = OAuth2TokenStorage()
     
@@ -42,7 +41,7 @@ final class ImagesListService {
                     let photoViewModels = photos.map { Photo(decodedData: $0) }
                     self.photos.append(contentsOf: photoViewModels)
                     NotificationCenter.default.post(
-                        name: ImagesListService.DidChangeNotification,
+                        name: .imagesListServiceNotification,
                         object: self
                     )
                 case .failure(let error):

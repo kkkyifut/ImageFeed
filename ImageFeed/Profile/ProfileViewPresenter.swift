@@ -15,7 +15,7 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
     func viewDidLoad() {
         profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.DidChangeNotification,
+            forName: .profileImageProviderNotification,
             object: nil,
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }

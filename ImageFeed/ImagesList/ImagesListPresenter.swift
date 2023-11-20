@@ -12,7 +12,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     
     func viewDidLoad() {
         imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.DidChangeNotification,
+            forName: .imagesListServiceNotification,
             object: nil,
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }

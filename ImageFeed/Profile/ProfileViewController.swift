@@ -119,7 +119,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            avatarImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            avatarImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             avatarImageView.widthAnchor.constraint(equalToConstant: 70),
             avatarImageView.heightAnchor.constraint(equalToConstant: 70),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
@@ -155,7 +155,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         self.logoutButton = exitButton
         
         NSLayoutConstraint.activate([
-            exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            exitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             exitButton.centerYAnchor.constraint(equalTo: self.avatarImageView.centerYAnchor),
         ])
     }

@@ -36,13 +36,9 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         presenter.viewDidLoad()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: ImagesListService.DidChangeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .imagesListServiceNotification, object: nil)
     }
     
     internal func updateTableViewAnimated() {
