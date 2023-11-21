@@ -30,7 +30,7 @@ final class ImagesListService {
             return
         }
         let page = lastLoadedPage ?? 1
-        let request = makeRequest(token: token, page: page)
+        let request = makeRequest(token: token, page: page, per_page: 15)
 
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
@@ -54,8 +54,8 @@ final class ImagesListService {
         task.resume()
     }
     
-    private func makeRequest(token: String, page: Int) -> URLRequest {
-        guard let url = URL(string: defaultBaseURLString + "photos?page=\(page)") else { fatalError("Failed to create URL") }
+    private func makeRequest(token: String, page: Int, per_page: Int = 10) -> URLRequest {
+        guard let url = URL(string: defaultBaseURLString + "photos?page=\(page)&per_page=\(per_page)") else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
@@ -132,6 +132,8 @@ struct Photo: Codable {
     let createdAt: String?
     let welcomeDescription: String?
     let thumbImageURL: String
+    let smallImageURL: String
+    let regularImageURL: String
     let largeImageURL: String
     var isLiked: Bool
     
@@ -142,6 +144,8 @@ struct Photo: Codable {
         self.createdAt = decodedData.createdAt
         self.welcomeDescription = decodedData.welcomeDescription
         self.thumbImageURL = decodedData.urls[UrlsResult.CodingKeys.thumbImageURL.rawValue]!
+        self.smallImageURL = decodedData.urls[UrlsResult.CodingKeys.smallImageURL.rawValue]!
+        self.regularImageURL = decodedData.urls[UrlsResult.CodingKeys.regularImageURL.rawValue]!
         self.largeImageURL = decodedData.urls[UrlsResult.CodingKeys.largeImageURL.rawValue]!
         self.isLiked = decodedData.isLiked
     }
@@ -149,10 +153,14 @@ struct Photo: Codable {
 
 struct UrlsResult: Codable {
     let thumbImageURL: String
+    let smallImageURL: String
+    let regularImageURL: String
     let largeImageURL: String
     
     enum CodingKeys: String, CodingKey {
         case thumbImageURL = "thumb"
+        case smallImageURL = "small"
+        case regularImageURL = "regular"
         case largeImageURL = "full"
     }
 }

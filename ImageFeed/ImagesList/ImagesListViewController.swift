@@ -80,7 +80,7 @@ extension ImagesListViewController: UITableViewDelegate {
 
         let initialFrame = tableView.convert(rectOfCellInTableView, to: view)
         let photo = photos[indexPath.row]
-        guard let imageURL = URL(string: photo.largeImageURL) else { return }
+        guard let imageURL = URL(string: photo.regularImageURL) else { return }
         singleImageVC.imageURL = imageURL
         singleImageVC.transitioningDelegate = self
         singleImageVC.interactor = interactor
@@ -119,7 +119,7 @@ extension ImagesListViewController {
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photo = photos[indexPath.row]
-        guard let imageURL = URL(string: photo.thumbImageURL) else { return }
+        guard let imageURL = URL(string: photo.smallImageURL) else { return }
         
         let offsetX: CGFloat = 20
         let offsetY: CGFloat = 3

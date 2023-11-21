@@ -4,8 +4,11 @@ let accessKeyString = "SEU86dDW3Vi-KlxqoJrqcUWfc8vt0HxNuxuyUfnUJyc"
 let secretKeyString = "a5FllIZUZDByz-kVOiAwMMqEJ30aZwf5D25eqJQVfAU"
 let redirectURIString = "urn:ietf:wg:oauth:2.0:oob"
 let accessScopeString = "public+read_user+write_likes"
+/// https://api.unsplash.com/
 let defaultBaseURLString = "https://api.unsplash.com/"
+/// https://unsplash.com/oauth/authorize
 let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+/// https://unsplash.com/oauth/token
 let unsplashTokenURLString = "https://unsplash.com/oauth/token"
 
 struct AuthConfiguration {

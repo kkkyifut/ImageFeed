@@ -25,7 +25,7 @@ final class SingleImageViewController: UIViewController {
         self.backButton.alpha = 0
         self.shareButton.alpha = 0
         
-        let duration = 0.25
+        let duration = 0.2
         
         UIView.animate(withDuration: duration, animations: {
             self.scrollView.setZoomScale(self.scrollView.minimumZoomScale, animated: true)
