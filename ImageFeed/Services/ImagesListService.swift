@@ -1,12 +1,15 @@
 import UIKit
+import Combine
 
 final class ImagesListService {
     static let shared = ImagesListService()
     private let storageToken = OAuth2TokenStorage()
+    private let urlSession = URLSession.shared
     
     private (set) var photos: [Photo] = []
     private var task: URLSessionTask?
-    private var lastLoadedPage: Int?
+    private var cancellables = Set<AnyCancellable>()
+    private var lastLoadedPage: Int = 0
     
     init() {}
     
@@ -15,43 +18,37 @@ final class ImagesListService {
     }
 
     func fetchPhotosNextPage() {
-        
         assert(Thread.isMainThread)
-        if task != nil { return }
         
-        if lastLoadedPage != nil {
-            lastLoadedPage! += 1
-        } else {
-            lastLoadedPage = 1
-        }
+        lastLoadedPage += 1
         
         guard let token = storageToken.token else {
             print(ServiceError.emptyToken)
             return
         }
-        let page = lastLoadedPage ?? 1
-        let request = makeRequest(token: token, page: page, per_page: 15)
-
-        let session = URLSession.shared
-        let task = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let photos):
-                    let photoViewModels = photos.map { Photo(decodedData: $0) }
-                    self.photos.append(contentsOf: photoViewModels)
-                    NotificationCenter.default.post(
-                        name: .imagesListServiceNotification,
-                        object: self
-                    )
-                case .failure(let error):
+        
+        let request = makeRequest(token: token, page: lastLoadedPage, per_page: 15)
+        
+        urlSession.dataTaskPublisher(for: request)
+            .map(\.data)
+            .decode(type: [PhotoResult].self, decoder: JSONDecoder())
+            .map { photos -> [Photo] in
+                return photos.map { Photo(decodedData: $0) }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
                     print(error)
                 }
-            }
-            self.task = nil
-        }
-        self.task = task
-        task.resume()
+            }, receiveValue: { [weak self] photoViewModels in
+                guard let self = self else { return }
+                self.photos.append(contentsOf: photoViewModels)
+                NotificationCenter.default.post(
+                    name: .imagesListServiceNotification,
+                    object: self
+                )
+            })
+            .store(in: &cancellables)
     }
     
     private func makeRequest(token: String, page: Int, per_page: Int = 10) -> URLRequest {
@@ -79,8 +76,7 @@ extension ImagesListService {
         }
         let request = makeLikeRequest(token: token, photoId: photoId, isLike: isLike)
         
-        let session = URLSession.shared
-        let task = session.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let photoResult):
