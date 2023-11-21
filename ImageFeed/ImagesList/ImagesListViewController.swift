@@ -8,7 +8,9 @@ protocol ImagesListViewControllerProtocol: AnyObject {
 
 final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
+    private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
     private let imagesListService = ImagesListService.shared
+    let interactor = Interactor()
     private let storageToken = OAuth2TokenStorage()
     private let animationGradient = AnimationGradientFactory.shared
     var photos: [Photo] = []
@@ -52,17 +54,15 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
             } completion: { _ in }
         }
     }
+}
+
+extension ImagesListViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        DismissAnimator()
+    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == ShowSingleImageSegueIdentifier {
-            let viewController = segue.destination as! SingleImageViewController
-            let indexPath = sender as! IndexPath
-            let photo = photos[indexPath.row]
-            guard let imageURL = URL(string: photo.largeImageURL) else { return }
-            viewController.imageURL = imageURL
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        interactor.hasStarted ? interactor : .none
     }
 }
 
@@ -70,7 +70,21 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
+        
+        let singleImageVC = storyboardInstance.instantiateViewController(identifier: "SingleImageViewController") as! SingleImageViewController
+        singleImageVC.hidesBottomBarWhenPushed = true
+        singleImageVC.modalPresentationStyle = .overFullScreen
+
+        let photo = photos[indexPath.row]
+        guard let imageURL = URL(string: photo.largeImageURL) else { return }
+        singleImageVC.imageURL = imageURL
+        singleImageVC.transitioningDelegate = self
+        singleImageVC.interactor = interactor
+                
+        singleImageVC.view.frame = self.view.bounds
+        self.view.addSubview(singleImageVC.view)
+        self.present(singleImageVC, animated: false, completion: nil)
+        singleImageVC.didMove(toParent: self)
     }
 }
 
@@ -89,7 +103,6 @@ extension ImagesListViewController: UITableViewDataSource {
         configCell(for: imagesListCell, with: indexPath)
         return imagesListCell
     }
-    
 }
 
 extension ImagesListViewController {

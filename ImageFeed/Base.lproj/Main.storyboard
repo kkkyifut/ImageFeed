@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -125,7 +125,7 @@
         <!--Single Image View Controller-->
         <scene sceneID="PH1-nD-2dj">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="ucX-GO-c3Y" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleImageViewController" modalPresentationStyle="fullScreen" id="ucX-GO-c3Y" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pHb-yx-uef">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -135,6 +135,7 @@
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="393" placeholderIntrinsicHeight="393" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="ikH-lK-bZX">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="393"/>
+                                        <gestureRecognizers/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -150,7 +151,7 @@
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="55M-Rz-aad" userLabel="backwardButton">
-                                <rect key="frame" x="8" y="67" width="48" height="48"/>
+                                <rect key="frame" x="8" y="8" width="48" height="48"/>
                                 <accessibility key="accessibilityConfiguration" identifier="nav back button white"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="2OY-Qp-hgP"/>
@@ -187,16 +188,47 @@
                             <constraint firstItem="U9i-I1-Flf" firstAttribute="leading" secondItem="mpu-Jt-qkF" secondAttribute="leading" id="z89-N2-uEF"/>
                             <constraint firstItem="55M-Rz-aad" firstAttribute="top" secondItem="mpu-Jt-qkF" secondAttribute="top" constant="8" id="zfG-zs-yFX"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="FPE-yf-Bqw" appends="YES" id="fL9-T4-uDx"/>
+                            <outletCollection property="gestureRecognizers" destination="DIN-db-e46" appends="YES" id="D6c-do-omx"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="AvJ-s8-2EJ"/>
                     <connections>
+                        <outlet property="backButton" destination="55M-Rz-aad" id="gP6-xi-Hxm"/>
                         <outlet property="imageView" destination="ikH-lK-bZX" id="og5-kT-dlb"/>
                         <outlet property="scrollView" destination="U9i-I1-Flf" id="zkw-4w-7tF"/>
+                        <outlet property="shareButton" destination="vGB-r0-iiI" id="HSY-JH-K6K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="glg-8O-hBg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="FPE-yf-Bqw">
+                    <connections>
+                        <action selector="handleGestureWithSender:" destination="ucX-GO-c3Y" id="vuz-95-Mfe"/>
+                    </connections>
+                </panGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="DIN-db-e46">
+                    <connections>
+                        <action selector="doubleTapGesture:" destination="ucX-GO-c3Y" id="BoR-2E-aEg"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1905" y="-2"/>
+        </scene>
+        <!--Splash View Controller-->
+        <scene sceneID="hSq-DU-noT">
+            <objects>
+                <viewController storyboardIdentifier="SplashViewController" id="TAz-iX-QQl" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2rc-4z-1xP">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="XrT-Zq-Aux"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vff-Fk-et3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="76" y="-1381"/>
         </scene>
         <!--Auth View Controller-->
         <scene sceneID="XBF-bs-opl">
@@ -270,7 +302,7 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwy-U1-apK">
-                                <rect key="frame" x="0.0" y="59" width="64" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="64" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="64" id="dys-Ew-HvL"/>
                                     <constraint firstAttribute="height" constant="44" id="kcc-gg-euy"/>
@@ -283,7 +315,7 @@
                                 </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uTF-CC-5kN">
-                                <rect key="frame" x="0.0" y="103" width="393" height="4"/>
+                                <rect key="frame" x="0.0" y="44" width="393" height="4"/>
                                 <color key="progressTintColor" name="YP Black"/>
                             </progressView>
                         </subviews>
