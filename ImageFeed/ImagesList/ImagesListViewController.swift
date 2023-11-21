@@ -10,7 +10,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
     private let imagesListService = ImagesListService.shared
-    let interactor = Interactor()
+    private let interactor = Interactor()
     private let storageToken = OAuth2TokenStorage()
     private let animationGradient = AnimationGradientFactory.shared
     var photos: [Photo] = []
@@ -75,16 +75,26 @@ extension ImagesListViewController: UITableViewDelegate {
         singleImageVC.hidesBottomBarWhenPushed = true
         singleImageVC.modalPresentationStyle = .overFullScreen
 
+        let rectOfCellInTableView = tableView.rectForRow(at: indexPath)
+        tableView.cellForRow(at: indexPath)?.contentView.alpha = 0
+
+        let initialFrame = tableView.convert(rectOfCellInTableView, to: view)
         let photo = photos[indexPath.row]
         guard let imageURL = URL(string: photo.largeImageURL) else { return }
         singleImageVC.imageURL = imageURL
         singleImageVC.transitioningDelegate = self
         singleImageVC.interactor = interactor
+        singleImageVC.initialCenter = initialFrame
+        singleImageVC.initialCenter.origin.y = initialFrame.origin.y + initialFrame.height / 2
                 
         singleImageVC.view.frame = self.view.bounds
         self.view.addSubview(singleImageVC.view)
         self.present(singleImageVC, animated: false, completion: nil)
         singleImageVC.didMove(toParent: self)
+        
+        singleImageVC.onDismiss = {
+            tableView.cellForRow(at: indexPath)?.contentView.alpha = 1
+        }
     }
 }
 

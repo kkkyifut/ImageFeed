@@ -3,7 +3,10 @@ import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     var interactor: Interactor? = nil
-    private var isZoomed = false
+    var onDismiss: (() -> Void)?
+    var initialCenter: CGRect = .zero
+    var transitionPointY: CGFloat = .zero
+    private var is2xZoomed = false
     
     var imageURL: URL! {
         didSet {
@@ -18,12 +21,28 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private weak var shareButton: UIButton!
     
     @IBAction private func didTapBackButton() {
-        dismiss(animated: true, completion: nil)
-        self.view.removeFromSuperview()
+        self.view.backgroundColor = .clear
+        self.backButton.alpha = 0
+        self.shareButton.alpha = 0
+        
+        let duration = 0.25
+        
+        UIView.animate(withDuration: duration, animations: {
+            self.scrollView.setZoomScale(self.scrollView.minimumZoomScale, animated: true)
+            self.scrollView.transform = CGAffineTransform(translationX: 0, y: -self.transitionPointY)
+        }, completion: { _ in
+            self.onDismiss?()
+            UIView.animate(withDuration: duration, animations: {
+                self.scrollView.alpha = 0
+            }, completion: { _ in
+                self.dismiss(animated: true, completion: nil)
+                self.view.removeFromSuperview()
+            })
+        })
     }
     
     @IBAction private func handleGesture(sender: UIPanGestureRecognizer) {
-        guard !isZoomed else { return }
+        guard !is2xZoomed else { return }
         
         let percentThreshold: CGFloat = 0.3
         let translation = sender.translation(in: view)
@@ -38,10 +57,12 @@ final class SingleImageViewController: UIViewController {
             case .began:
                 interactor.hasStarted = true
             case .changed:
-                interactor.shouldFinish = progress > percentThreshold
+                let shouldFinish = progress > percentThreshold || abs(verticalMovement) > percentThreshold
+                interactor.shouldFinish = shouldFinish
                 scrollView.transform = CGAffineTransform(translationX: 0, y: translation.y)
+                transitionPointY = scrollView.center.y - initialCenter.origin.y
                 
-                let alpha = 1.0 - progress
+                let alpha = progress > 0 ? 1.0 - (progress / percentThreshold) : 1.0 - abs(verticalMovement) / percentThreshold
                 self.view.backgroundColor = UIColor(named: "YP Black")?.withAlphaComponent(alpha)
                 UIView.animate(withDuration: 0.2) {
                     self.backButton.alpha = 0
@@ -122,7 +143,7 @@ extension SingleImageViewController: UIScrollViewDelegate {
         let offsetX = max((scrollView.bounds.width - scrollView.contentSize.width) * 0.5, 0)
         let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) * 0.5, 0)
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: 0, right: 0)
-        isZoomed = scrollView.zoomScale > scrollView.minimumZoomScale * 2
+        is2xZoomed = scrollView.zoomScale > scrollView.minimumZoomScale * 2
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -141,6 +162,8 @@ extension SingleImageViewController: UIScrollViewDelegate {
         let offsetX = max((scrollView.bounds.width - scrollView.contentSize.width) * 0.5, 0)
         let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) * 0.5, 0)
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: 0, right: 0)
+        
+        transitionPointY = scrollView.center.y - initialCenter.origin.y
     }
     
     private func getInitialScaleForZoom(image: UIImage) -> CGFloat {
