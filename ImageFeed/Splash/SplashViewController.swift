@@ -1,10 +1,12 @@
 import UIKit
+import Combine
 
 final class SplashViewController: UIViewController {
     private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
     private let storageToken = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private var cancellable: AnyCancellable?
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,27 +42,32 @@ final class SplashViewController: UIViewController {
     }
     
     private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            DispatchQueue.main.async { [self] in
+        cancellable = profileService.fetchProfile(token)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
-
-                switch result {
-                case .success:
-                    self.profileImageService.fetchProfileImageURL(username: (self.profileService.profile?.username)!) { _ in
-                    }
-                    self.showNextScreen(withID: "TabBarViewController")
-                case .failure:
-                    let alert = UIAlertController(
-                        title: "Что-то пошло не так",
-                        message: "Не удалось войти в систему. Проверьте ваше интернет соединение",
-                        preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "ОК", style: .default) { _ in
-                        self.showNextScreen(withID: "SplashViewController")
-                    }
-                    alert.addAction(okAction)
-                    self.present(alert, animated: true, completion: nil)
+                switch completion {
+                    case .finished:
+                        break
+                    case .failure:
+                        let alert = UIAlertController(
+                            title: "Что-то пошло не так",
+                            message: "Не удалось войти в систему. Проверьте ваше интернет соединение",
+                            preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                            self.showNextScreen(withID: "SplashViewController")
+                        }
+                        alert.addAction(okAction)
+                        self.present(alert, animated: true, completion: nil)
+                        UIBlockingProgressHUD.dismiss()
                 }
-            }
-        }
+            }, receiveValue: { [weak self] _ in
+                guard let self = self else { return }
+                if let username = self.profileService.profile?.username {
+                    self.profileImageService.fetchProfileImageURL(username: username) { _ in }
+                }
+                self.showNextScreen(withID: "TabBarViewController")
+                UIBlockingProgressHUD.dismiss()
+            })
     }
 }

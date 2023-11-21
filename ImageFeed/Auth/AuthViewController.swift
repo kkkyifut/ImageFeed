@@ -1,11 +1,13 @@
 import UIKit
 import ProgressHUD
+import Combine
 
 final class AuthViewController: UIViewController {
     private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let storageToken = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private var cancellable: AnyCancellable?
     
     private enum NetworkError: Error {
         case codeError
@@ -48,18 +50,22 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            guard self != nil else { return }
-            switch result {
-            case .success:
-                self?.transitionToTabBar()
+        cancellable = profileService.fetchProfile(token)
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        UIBlockingProgressHUD.dismiss()
+                        print("Error:", error)
+                        break
+                }
+            }, receiveValue: { [weak self] _ in
+                guard let self = self else { return }
+                self.transitionToTabBar()
                 UIBlockingProgressHUD.dismiss()
-            case .failure:
-                UIBlockingProgressHUD.dismiss()
-                print("Error:", NetworkError.codeError)
-                break
-            }
-        }
+            })
     }
     
     private func transitionToTabBar() {

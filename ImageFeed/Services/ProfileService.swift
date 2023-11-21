@@ -1,33 +1,37 @@
 import Foundation
+import Combine
 
 final class ProfileService {
     static let shared = ProfileService()
     private let urlSession = URLSession.shared
-    private var task: URLSessionTask?
+    private var cancellable: AnyCancellable?
     private(set) var profile: Profile?
     
     private init() {}
     
-    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+    func fetchProfile(_ token: String) -> AnyPublisher<Profile, Error> {
         assert(Thread.isMainThread)
-        task?.cancel()
         
         let request = makeRequest(token: token)
-        let session = URLSession.shared
-        let task = session.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let decodedObject):
-                    let profile = Profile(decodedData: decodedObject)
-                    self?.profile = profile
-                    completion(.success(profile))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
+        
+        let publisher = urlSession.dataTaskPublisher(for: request)
+            .map(\.data)
+            .decode(type: ProfileResult.self, decoder: JSONDecoder())
+            .map { decodedObject -> Profile in
+                let profile = Profile(decodedData: decodedObject)
+                self.profile = profile
+                return profile
             }
-        }
-        self.task = task
-        task.resume()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        
+        cancellable = publisher.sink(receiveCompletion: { completion in
+            if case let .failure(error) = completion {
+                print("Error:", error)
+            }
+        }, receiveValue: { _ in })
+        
+        return publisher
     }
     
     private func makeRequest(token: String) -> URLRequest {
