@@ -7,6 +7,7 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +65,9 @@ final class SplashViewController: UIViewController {
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
                 if let username = self.profileService.profile?.username {
-                    self.profileImageService.fetchProfileImageURL(username: username) { _ in }
+                    self.profileImageService.fetchProfileImageURL(username: username)
+                        .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+                        .store(in: &self.cancellables)
                 }
                 self.showNextScreen(withID: "TabBarViewController")
                 UIBlockingProgressHUD.dismiss()

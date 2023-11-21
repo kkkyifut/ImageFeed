@@ -1,33 +1,42 @@
 import Foundation
+import Combine
 
 final class ProfileImageService {
     static let shared = ProfileImageService()
     private let urlSession = URLSession.shared
-    private var task: URLSessionTask?
+    private var cancellable: AnyCancellable?
     private let storageToken = OAuth2TokenStorage()
     private(set) var avatarURL: String?
     
-    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfileImageURL(username: String) -> AnyPublisher<String, Error> {
         assert(Thread.isMainThread)
+        
         let request = makeRequest(token: storageToken.token!, username: username)
-        let session = URLSession.shared
-        let task = session.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let decodedObject):
+        
+        let publisher = urlSession.dataTaskPublisher(for: request)
+            .map(\.data)
+            .decode(type: UserResult.self, decoder: JSONDecoder())
+            .map { decodedObject -> String in
                 let avatarURL = ProfileImage(decodedData: decodedObject)
-                self.avatarURL = avatarURL.profileImage["large"]
-                completion(.success(self.avatarURL!))
+                return avatarURL.profileImage["large"] ?? ""
+            }
+            .handleEvents(receiveOutput: { [weak self] avatarURL in
+                self?.avatarURL = avatarURL
                 NotificationCenter.default.post(
                     name: .profileImageProviderNotification,
                     object: self,
-                    userInfo: ["URL": self.avatarURL!])
-            case .failure(let error):
-                completion(.failure(error))
+                    userInfo: ["URL": avatarURL])
+            })
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        
+        cancellable = publisher.sink(receiveCompletion: { completion in
+            if case let .failure(error) = completion {
+                print("Error:", error)
             }
-        }
-        self.task = task
-        task.resume()
+        }, receiveValue: { _ in })
+        
+        return publisher
     }
     
     private func makeRequest(token: String, username: String) -> URLRequest {
