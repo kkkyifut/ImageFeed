@@ -28,7 +28,7 @@ final class ImagesListService {
             return
         }
         
-        let request = makeRequest(token: token, page: lastLoadedPage, per_page: 15)
+        let request = makeRequest(token: token, page: lastLoadedPage, per_page: 10)
         
         urlSession.dataTaskPublisher(for: request)
             .map(\.data)

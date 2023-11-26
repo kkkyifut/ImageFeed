@@ -4,7 +4,7 @@ import Combine
 
 protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListPresenterProtocol { get set }
-    func updateTableViewAnimated()
+    func updateCollectionViewAnimated()
 }
 
 final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
@@ -27,7 +27,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         return ImagesListPresenter()
     } ()
     
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet private var collectionView: UICollectionView!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -45,14 +45,14 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         NotificationCenter.default.removeObserver(self, name: .imagesListServiceNotification, object: nil)
     }
     
-    internal func updateTableViewAnimated() {
+    func updateCollectionViewAnimated() {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
         photos = imagesListService.photos
         if oldCount != newCount {
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
-                tableView.insertRows(at: indexPaths, with: .bottom)
+            collectionView.performBatchUpdates {
+                let indexPaths = (oldCount..<newCount).map { IndexPath(item: $0, section: 0) }
+                collectionView.insertItems(at: indexPaths)
             } completion: { _ in }
         }
     }
@@ -69,46 +69,47 @@ extension ImagesListViewController: UIViewControllerTransitioningDelegate {
 }
 
 
-extension ImagesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+extension ImagesListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
         
         let singleImageVC = storyboardInstance.instantiateViewController(identifier: "SingleImageViewController") as! SingleImageViewController
         singleImageVC.hidesBottomBarWhenPushed = true
         singleImageVC.modalPresentationStyle = .overFullScreen
-
-        let rectOfCellInTableView = tableView.rectForRow(at: indexPath)
-        tableView.cellForRow(at: indexPath)?.contentView.alpha = 0
-
-        let initialFrame = tableView.convert(rectOfCellInTableView, to: view)
-        let photo = photos[indexPath.row]
+        
+        let rectOfCellInCollectionView = collectionView.cellForItem(at: indexPath)!.frame
+//        let rectOfCellInCollectionView = tableView.rectForRow(at: indexPath)
+        collectionView.cellForItem(at: indexPath)?.contentView.alpha = 0
+        
+        let initialFrame = collectionView.convert(rectOfCellInCollectionView, to: view)
+        let photo = photos[indexPath.item]
         guard let imageURL = URL(string: photo.regularImageURL) else { return }
         singleImageVC.imageURL = imageURL
         singleImageVC.transitioningDelegate = self
         singleImageVC.interactor = interactor
         singleImageVC.initialCenter = initialFrame
         singleImageVC.initialCenter.origin.y = initialFrame.origin.y + initialFrame.height / 2
-                
+        
         singleImageVC.view.frame = self.view.bounds
         self.view.addSubview(singleImageVC.view)
         self.present(singleImageVC, animated: false, completion: nil)
         singleImageVC.didMove(toParent: self)
         
         singleImageVC.onDismiss = {
-            tableView.cellForRow(at: indexPath)?.contentView.alpha = 1
+            collectionView.cellForItem(at: indexPath)?.contentView.alpha = 1
         }
     }
 }
 
-extension ImagesListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension ImagesListViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         guard let imagesListCell = cell as? ImagesListCell else {
-            return UITableViewCell()
+            return UICollectionViewCell()
         }
         imagesListCell.delegate = self
         
@@ -116,27 +117,34 @@ extension ImagesListViewController: UITableViewDataSource {
         return imagesListCell
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == photos.count {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.item + 1 == photos.count {
             imagesListService.fetchPhotosNextPage()
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let cell = photos[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cell = photos[indexPath.item]
         let imageSize = CGSize(width: cell.width, height: cell.height)
         let aspectRatio = imageSize.width / imageSize.height
-        return tableView.frame.width / aspectRatio
+        
+        let width = collectionView.frame.width
+        let height = width / aspectRatio
+        return CGSize(width: width / 2, height: height / 2)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
 }
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let photo = photos[indexPath.row]
+        let photo = photos[indexPath.item]
         guard let imageURL = URL(string: photo.smallImageURL) else { return }
         
-        let offsetX: CGFloat = 20
-        let offsetY: CGFloat = 3
+        let offsetX: CGFloat = 0
+        let offsetY: CGFloat = 0
         let cornerRadius: CGFloat = cell.cellImage.layer.cornerRadius
         
         let gradient = animationGradient.createGradient(
@@ -160,10 +168,10 @@ extension ImagesListViewController {
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         UIBlockingProgressHUD.show()
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        let photo = photos[indexPath.row]
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.item]
         
-        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked, indexPath: indexPath.row)
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked, indexPath: indexPath.item)
             .sink(receiveCompletion: { completion in
                 DispatchQueue.main.async {
                     switch completion {
@@ -177,7 +185,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
             }, receiveValue: { [weak cell, weak self] photo in
                 guard let cell = cell, let self = self else { return }
                 DispatchQueue.main.async {
-                    self.photos[indexPath.row].isLiked = photo.isLiked
+                    self.photos[indexPath.item].isLiked = photo.isLiked
                     cell.setIsLiked(isLiked: photo.isLiked)
                 }
             }

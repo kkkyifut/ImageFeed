@@ -16,7 +16,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
             object: nil,
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }
-                self.view?.updateTableViewAnimated()
+                self.view?.updateCollectionViewAnimated()
             }
         
         imagesListService.fetchPhotosNextPage()

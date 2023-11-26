@@ -7,6 +7,7 @@
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -35,86 +36,91 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" indicatorStyle="white" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="4nb-bj-Fg5">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ahb-v8-JI6">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" name="YP Black"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationWidth="10" reuseIdentifier="ImagesListCell" rowHeight="224" id="RgU-aj-NHu" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="393" height="224"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="MkY-eu-tiT">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" reuseIdentifier="ImagesListCell" id="AZ6-Ia-aWi" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RgU-aj-NHu" id="GEf-y9-GPQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="224"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" id="KPT-0J-T2G">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="0Gb-cu-bHZ" userLabel="Cell Image">
-                                                    <rect key="frame" x="20" y="3" width="353" height="218"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="1du-tq-5rA" userLabel="Cell Image">
+                                                    <rect key="frame" x="0.0" y="-8" width="128" height="144"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius ">
                                                             <integer key="value" value="16"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mBf-Ld-ExC" userLabel="Date Label">
-                                                    <rect key="frame" x="28.000000000000007" y="197.66666666666666" width="101.66666666666669" height="15.333333333333343"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GJX-9t-NPd" userLabel="Date Label">
+                                                    <rect key="frame" x="16" y="104.66666666666667" width="84" height="15.333333333333329"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="YP White"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" alpha="0.75" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EgQ-Rx-Hs1" userLabel="Like Button">
-                                                    <rect key="frame" x="331" y="3" width="42" height="42"/>
+                                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePb-Wh-XRu" userLabel="Like Button">
+                                                    <rect key="frame" x="100" y="98.333333333333329" width="28" height="28"/>
                                                     <accessibility key="accessibilityConfiguration" identifier="likeButton"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="42" id="88j-y6-LEq"/>
-                                                        <constraint firstAttribute="width" constant="42" id="yUD-0q-Ef8"/>
+                                                        <constraint firstAttribute="width" secondItem="ePb-Wh-XRu" secondAttribute="height" multiplier="1:1" id="RTv-FX-sVv"/>
                                                     </constraints>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="likeOnButton"/>
                                                     <connections>
-                                                        <action selector="likeButtonAction:" destination="RgU-aj-NHu" eventType="touchUpInside" id="DlU-R4-PfA"/>
+                                                        <action selector="likeButtonAction:" destination="AZ6-Ia-aWi" eventType="touchUpInside" id="cMt-t4-Eks"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="0Gb-cu-bHZ" secondAttribute="bottom" constant="-8" id="2rR-F5-im7"/>
-                                                <constraint firstItem="mBf-Ld-ExC" firstAttribute="leading" secondItem="0Gb-cu-bHZ" secondAttribute="leading" constant="8" id="6ye-hJ-Ys2"/>
-                                                <constraint firstItem="EgQ-Rx-Hs1" firstAttribute="top" secondItem="0Gb-cu-bHZ" secondAttribute="top" id="DaN-5g-e6D"/>
-                                                <constraint firstItem="0Gb-cu-bHZ" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mBf-Ld-ExC" secondAttribute="trailing" constant="-8" id="INN-F1-fAo"/>
-                                                <constraint firstItem="0Gb-cu-bHZ" firstAttribute="bottom" secondItem="mBf-Ld-ExC" secondAttribute="bottom" constant="8" id="LIf-xe-8TC"/>
-                                                <constraint firstItem="0Gb-cu-bHZ" firstAttribute="leading" secondItem="GEf-y9-GPQ" secondAttribute="leadingMargin" id="No0-MC-BVe"/>
-                                                <constraint firstItem="0Gb-cu-bHZ" firstAttribute="trailing" secondItem="EgQ-Rx-Hs1" secondAttribute="trailing" id="O6q-SN-CsQ"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="0Gb-cu-bHZ" secondAttribute="trailing" id="ooj-yM-01T"/>
-                                                <constraint firstItem="0Gb-cu-bHZ" firstAttribute="top" secondItem="GEf-y9-GPQ" secondAttribute="topMargin" constant="-8" id="t5A-fa-TVZ"/>
+                                                <constraint firstAttribute="trailing" secondItem="1du-tq-5rA" secondAttribute="trailing" id="4i9-2B-hI9"/>
+                                                <constraint firstItem="1du-tq-5rA" firstAttribute="leading" secondItem="KPT-0J-T2G" secondAttribute="leading" id="AND-Hv-YAv"/>
+                                                <constraint firstItem="1du-tq-5rA" firstAttribute="trailing" secondItem="ePb-Wh-XRu" secondAttribute="trailing" id="Qir-5n-fY8"/>
+                                                <constraint firstItem="GJX-9t-NPd" firstAttribute="leading" secondItem="1du-tq-5rA" secondAttribute="leading" constant="16" id="ZkS-re-Zvj"/>
+                                                <constraint firstItem="ePb-Wh-XRu" firstAttribute="width" secondItem="KPT-0J-T2G" secondAttribute="width" multiplier="0.22" id="dPg-pk-XXB"/>
+                                                <constraint firstItem="ePb-Wh-XRu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="GJX-9t-NPd" secondAttribute="trailing" id="fZX-EA-mfQ"/>
+                                                <constraint firstItem="ePb-Wh-XRu" firstAttribute="centerY" secondItem="GJX-9t-NPd" secondAttribute="centerY" id="kgw-SO-PNp"/>
+                                                <constraint firstAttribute="bottom" secondItem="1du-tq-5rA" secondAttribute="bottom" constant="-8" id="p04-1m-4o8"/>
+                                                <constraint firstItem="1du-tq-5rA" firstAttribute="top" secondItem="KPT-0J-T2G" secondAttribute="top" constant="-8" id="pmO-sO-Rf5"/>
+                                                <constraint firstItem="1du-tq-5rA" firstAttribute="bottom" secondItem="GJX-9t-NPd" secondAttribute="bottom" constant="16" id="uab-Lg-70s"/>
                                             </constraints>
-                                        </tableViewCellContentView>
+                                        </collectionViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
                                         <connections>
-                                            <outlet property="cellImage" destination="0Gb-cu-bHZ" id="FeO-q1-pQa"/>
-                                            <outlet property="dateLabel" destination="mBf-Ld-ExC" id="LUs-EV-rSU"/>
-                                            <outlet property="likeButton" destination="EgQ-Rx-Hs1" id="ZVQ-C0-CRJ"/>
+                                            <outlet property="cellImage" destination="1du-tq-5rA" id="roY-tG-7bK"/>
+                                            <outlet property="dateLabel" destination="GJX-9t-NPd" id="gTq-ZU-YZH"/>
+                                            <outlet property="likeButton" destination="ePb-Wh-XRu" id="XcY-uy-eQT"/>
                                         </connections>
-                                    </tableViewCell>
-                                </prototypes>
+                                    </collectionViewCell>
+                                </cells>
                                 <connections>
-                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="8a3-40-fAU"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="qwu-kl-HH6"/>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="bqx-nC-obf"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="MB8-GO-n61"/>
                                 </connections>
-                            </tableView>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="4nb-bj-Fg5" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="0xl-r4-en1"/>
-                            <constraint firstItem="4nb-bj-Fg5" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="97V-Vs-DpN"/>
-                            <constraint firstAttribute="trailing" secondItem="4nb-bj-Fg5" secondAttribute="trailing" id="K7L-Qn-krv"/>
-                            <constraint firstAttribute="bottom" secondItem="4nb-bj-Fg5" secondAttribute="bottom" id="OHv-ya-jMc"/>
+                            <constraint firstItem="Ahb-v8-JI6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="NhU-My-WLm"/>
+                            <constraint firstAttribute="trailing" secondItem="Ahb-v8-JI6" secondAttribute="trailing" id="Y9P-4P-QK2"/>
+                            <constraint firstAttribute="bottom" secondItem="Ahb-v8-JI6" secondAttribute="bottom" id="mnz-Zc-K1F"/>
+                            <constraint firstItem="Ahb-v8-JI6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="qE8-q6-Hcw"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xWz-3L-UWo"/>
                     <connections>
-                        <outlet property="tableView" destination="4nb-bj-Fg5" id="2Ci-OR-vCi"/>
+                        <outlet property="collectionView" destination="Ahb-v8-JI6" id="HBv-nZ-QuQ"/>
                         <segue destination="ucX-GO-c3Y" kind="presentation" identifier="ShowSingleImage" modalTransitionStyle="crossDissolve" id="PFo-5A-Sbu"/>
                     </connections>
                 </viewController>
