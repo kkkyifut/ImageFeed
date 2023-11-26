@@ -8,6 +8,7 @@ final class ImagesListService {
     
     private (set) var photos: [Photo] = []
     private var task: URLSessionTask?
+    private var cancellable: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     private var lastLoadedPage: Int = 0
     
@@ -64,31 +65,31 @@ extension ImagesListService {
         case raceCondition
     }
     
-    func changeLike(photoId: String, isLike: Bool, indexPath: Int, _ completion: @escaping (Result<Photo, Error>) -> Void) {
-        if task != nil {
-            completion(.failure(LikeServiceError.raceCondition))
-            return
+    func changeLike(photoId: String, isLike: Bool, indexPath: Int) -> AnyPublisher<Photo, Error> {
+        guard let token = storageToken.token else {
+            return Fail(error: ServiceError.emptyToken)
+                .eraseToAnyPublisher()
         }
         
-        guard let token = storageToken.token else {
-            completion(.failure(ServiceError.emptyToken))
-            return
-        }
         let request = makeLikeRequest(token: token, photoId: photoId, isLike: isLike)
         
-        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let photoResult):
-                self.photos[indexPath].isLiked = photoResult.photo.isLiked
-                completion(.success(Photo(decodedData: photoResult.photo)))
-            case .failure(let error):
-                completion(.failure(error))
+        let publisher = urlSession.dataTaskPublisher(for: request)
+            .map(\.data)
+            .decode(type: LikePhotoResult.self, decoder: JSONDecoder())
+            .map { result -> Photo in
+                self.photos[indexPath].isLiked = result.photo.isLiked
+                return Photo(decodedData: result.photo)
             }
-            self.task = nil
-        }
-        self.task = task
-        task.resume()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        
+        cancellable = publisher.sink(receiveCompletion: { completion in
+            if case let .failure(error) = completion {
+                print("Error:", error)
+            }
+        }, receiveValue: { _ in })
+        
+        return publisher
     }
     
     private func makeLikeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest {

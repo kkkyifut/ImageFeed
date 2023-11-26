@@ -1,5 +1,6 @@
 import UIKit
 import Kingfisher
+import Combine
 
 protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListPresenterProtocol { get set }
@@ -11,6 +12,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     private let storyboardInstance = UIStoryboard(name: "Main", bundle: nil)
     private let imagesListService = ImagesListService.shared
     private let interactor = Interactor()
+    private var cancellables = Set<AnyCancellable>()
     private let storageToken = OAuth2TokenStorage()
     private let animationGradient = AnimationGradientFactory.shared
     var photos: [Photo] = []
@@ -164,22 +166,25 @@ extension ImagesListViewController: ImagesListCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
         
-        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked, indexPath: indexPath.row) { [weak cell, weak self] response in
-            guard let cell = cell,
-                  let self = self
-            else { return }
-            
-            DispatchQueue.main.async {
-                switch response {
-                case .success(let photo):
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked, indexPath: indexPath.row)
+            .sink(receiveCompletion: { completion in
+                DispatchQueue.main.async {
+                    switch completion {
+                        case .finished:
+                            UIBlockingProgressHUD.dismiss()
+                        case .failure(let error):
+                            print(error)
+                            UIBlockingProgressHUD.dismiss()
+                    }
+                }
+            }, receiveValue: { [weak cell, weak self] photo in
+                guard let cell = cell, let self = self else { return }
+                DispatchQueue.main.async {
                     self.photos[indexPath.row].isLiked = photo.isLiked
                     cell.setIsLiked(isLiked: photo.isLiked)
-                    UIBlockingProgressHUD.dismiss()
-                case .failure(let error):
-                    print(error)
-                    UIBlockingProgressHUD.dismiss()
                 }
             }
-        }
+            )
+            .store(in: &cancellables)
     }
 }
