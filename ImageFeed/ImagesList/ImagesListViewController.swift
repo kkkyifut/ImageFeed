@@ -115,10 +115,22 @@ extension ImagesListViewController: UITableViewDataSource {
         configCell(for: imagesListCell, with: indexPath)
         return imagesListCell
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == photos.count {
+            imagesListService.fetchPhotosNextPage()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let cell = photos[indexPath.row]
+        let imageSize = CGSize(width: cell.width, height: cell.height)
+        let aspectRatio = imageSize.width / imageSize.height
+        return tableView.frame.width / aspectRatio
+    }
 }
 
 extension ImagesListViewController {
-    
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photo = photos[indexPath.row]
         guard let imageURL = URL(string: photo.smallImageURL) else { return }
@@ -142,21 +154,6 @@ extension ImagesListViewController {
         cell.dateLabel.text = dateFormatter.string(from: date ?? Date())
         
         cell.setIsLiked(isLiked: photo.isLiked)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let cell = photos[indexPath.row]
-        let imageSize = CGSize(width: cell.width, height: cell.height)
-        let aspectRatio = imageSize.width / imageSize.height
-        return tableView.frame.width / aspectRatio
-    }
-}
-
-extension ImagesListViewController {
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == photos.count {
-            imagesListService.fetchPhotosNextPage()
-        }
     }
 }
 
