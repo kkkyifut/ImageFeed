@@ -30,11 +30,13 @@ final class ProfileImageService {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
         
-        cancellable = publisher.sink(receiveCompletion: { completion in
-            if case let .failure(error) = completion {
-                print("Error:", error)
-            }
-        }, receiveValue: { _ in })
+        cancellable = publisher.sink(
+            receiveCompletion: { completion in
+                if case let .failure(error) = completion {
+                    print("Error:", error)
+                }
+            },
+            receiveValue: { _ in })
         
         return publisher
     }

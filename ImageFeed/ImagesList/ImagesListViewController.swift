@@ -78,7 +78,6 @@ extension ImagesListViewController: UICollectionViewDelegate {
         singleImageVC.modalPresentationStyle = .overFullScreen
         
         let rectOfCellInCollectionView = collectionView.cellForItem(at: indexPath)!.frame
-//        let rectOfCellInCollectionView = tableView.rectForRow(at: indexPath)
         collectionView.cellForItem(at: indexPath)?.contentView.alpha = 0
         
         let initialFrame = collectionView.convert(rectOfCellInCollectionView, to: view)
@@ -87,8 +86,8 @@ extension ImagesListViewController: UICollectionViewDelegate {
         singleImageVC.imageURL = imageURL
         singleImageVC.transitioningDelegate = self
         singleImageVC.interactor = interactor
-        singleImageVC.initialCenter = initialFrame
-        singleImageVC.initialCenter.origin.y = initialFrame.origin.y + initialFrame.height / 2
+        singleImageVC.initialFrame.origin.x = initialFrame.origin.x + initialFrame.width / 2
+        singleImageVC.initialFrame.origin.y = initialFrame.origin.y + initialFrame.height / 2
         
         singleImageVC.view.frame = self.view.bounds
         self.view.addSubview(singleImageVC.view)
@@ -124,17 +123,17 @@ extension ImagesListViewController: UICollectionViewDelegateFlowLayout, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cell = photos[indexPath.item]
-        let imageSize = CGSize(width: cell.width, height: cell.height)
-        let aspectRatio = imageSize.width / imageSize.height
-        
-        let width = collectionView.frame.width
-        let height = width / aspectRatio
-        return CGSize(width: width / 2, height: height / 2)
+        var width = (collectionView.frame.width - 5) / 2
+        var height = width * 1.44
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        5
     }
 }
 
@@ -152,6 +151,7 @@ extension ImagesListViewController {
             height: cell.frame.height - offsetY * 2,
             offsetX: offsetX, offsetY: offsetY, cornerRadius: cornerRadius)
         cell.layer.addSublayer(gradient)
+        cell.layer.cornerRadius = cell.cellImage.layer.cornerRadius
         
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "stubPlaceholder")) { _ in
