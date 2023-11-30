@@ -78,7 +78,7 @@ extension ImagesListViewController: UICollectionViewDelegate {
         singleImageVC.modalPresentationStyle = .overFullScreen
         
         let rectOfCellInCollectionView = collectionView.cellForItem(at: indexPath)!.frame
-        collectionView.cellForItem(at: indexPath)?.contentView.alpha = 0
+        guard let cellView = collectionView.cellForItem(at: indexPath) else { return }
         
         let initialFrame = collectionView.convert(rectOfCellInCollectionView, to: view)
         let photo = photos[indexPath.item]
@@ -91,11 +91,23 @@ extension ImagesListViewController: UICollectionViewDelegate {
         
         singleImageVC.view.frame = self.view.bounds
         self.view.addSubview(singleImageVC.view)
-        self.present(singleImageVC, animated: false, completion: nil)
+        singleImageVC.view.alpha = 0
+        singleImageVC.view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        singleImageVC.backButton.alpha = 0
+        singleImageVC.shareButton.alpha = 0
+        UIView.animate(withDuration: 0.3, animations: {
+            singleImageVC.view.alpha = 1
+            singleImageVC.view.transform = .identity
+        }, completion: { [weak self] _ in
+            self?.present(singleImageVC, animated: false, completion: nil)
+            singleImageVC.view.alpha = 1
+            cellView.contentView.alpha = 0
+            singleImageVC.appearingControlButtons()
+        })
         singleImageVC.didMove(toParent: self)
         
         singleImageVC.onDismiss = {
-            collectionView.cellForItem(at: indexPath)?.contentView.alpha = 1
+            cellView.contentView.alpha = 1
         }
     }
 }

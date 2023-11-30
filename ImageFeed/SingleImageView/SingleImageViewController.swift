@@ -18,13 +18,11 @@ final class SingleImageViewController: UIViewController {
     
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
-    @IBOutlet private weak var backButton: UIButton!
-    @IBOutlet private weak var shareButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
     
     @IBAction private func didTapBackButton() {
-        self.view.backgroundColor = .clear
-        self.backButton.alpha = 0
-        self.shareButton.alpha = 0
+        disappearingControlButtons()
         
         let scale = (imageView.frame.width / imageView.frame.height) > 1 ? 1.0 : 2.0
         self.scrollView.minimumZoomScale /= scale
@@ -81,12 +79,7 @@ final class SingleImageViewController: UIViewController {
                     interactor.finish()
                     didTapBackButton()
                 } else {
-                    UIView.animate(withDuration: 0.3) {
-                        self.scrollView.transform = .identity
-                        self.view.backgroundColor = UIColor(named: "YP Black")
-                        self.backButton.alpha = 1
-                        self.shareButton.alpha = 1
-                    }
+                    appearingControlButtons()
                     interactor.cancel()
                 }
             default:
@@ -138,6 +131,25 @@ final class SingleImageViewController: UIViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    func appearingControlButtons() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.scrollView.transform = .identity
+            self.view.backgroundColor = UIColor(named: "YP Black")
+            self.backButton.alpha = 1
+            self.shareButton.alpha = 1
+        }
+    }
+    
+    private func disappearingControlButtons() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.view.backgroundColor = .clear
+            self.backButton.alpha = 0
+            self.shareButton.alpha = 0
+        }
     }
 }
 
